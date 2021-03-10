@@ -9,12 +9,9 @@ callback interface to perform computations on such data outside the plugin.
 ## Usage
 
 The wrappers around the simulation data are intended to be instantiated after the
-`OpenMM::ContextImpl` for a particular simulation has been created, and can be created by
-passing the initialized simulation context to the constructor of the provided
-`SimulationView` class.
+`OpenMM::ContextImpl` for a particular simulation has been created.
 
 Given that forces are instantiated after `OpenMM::ContextImpl` creation, if any
-`DLExtForce` is created and added to a `OpenMM::System` after a simulation has been
-defined, the original `OpenMM::Context` needs to be reintialized before perfoming any
-computation that is intended to make use of the plugin. And only after this a
-`SimulationView` can be constructed and used.
+`DLExtForce` is added to a `OpenMM::System` after a simulation has been set, the original
+`OpenMM::Context` needs to be reintialized before perfoming any computation that is
+intended to make use of the plugin.
