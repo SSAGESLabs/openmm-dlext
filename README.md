@@ -10,8 +10,3 @@ callback interface to perform computations on such data outside the plugin.
 
 The wrappers around the simulation data are intended to be instantiated after the
 `OpenMM::ContextImpl` for a particular simulation has been created.
-
-Given that forces are instantiated after `OpenMM::ContextImpl` creation, if any
-`DLExtForce` is added to a `OpenMM::System` after a simulation has been set, the original
-`OpenMM::Context` needs to be reintialized before perfoming any computation that is
-intended to make use of the plugin.
