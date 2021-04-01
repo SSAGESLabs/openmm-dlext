@@ -13,9 +13,6 @@
 #endif
 #endif
 
-#define GET_MEMBER(object, member_ptr) ((object).*(member_ptr))
-#define GET_PTR_MEMBER(ptr, member_ptr) ((*ptr).*(member_ptr))
-
 
 #include <functional>
 #include <memory>
@@ -39,8 +36,14 @@ using UPtr = std::unique_ptr<T>;
 template <typename T>
 using Set = std::unordered_set<T>;
 
-template <typename R, typename... Ts>
-using Function = std::function<R(Ts...)>;
+template <typename T, typename ...Args>
+using Function = std::function<T(Args...)>;
+
+template <typename T, typename Object, typename ...Args>
+using MemberFunction = T (Object::*)(Args...);
+
+template <typename T, typename Object>
+using Member = T Object::*;
 
 //
 //  Functions
@@ -53,6 +56,18 @@ template <typename T, typename ...Args>
 UPtr<T> make_unique(Args&& ...args)
 {
     return UPtr<T>(new T(std::forward<Args>(args)...));
+}
+
+template <typename T, typename Object, typename ...Args>
+T call_member(Object& object, MemberFunction<T, Object, Args...> member, Args&& ...args)
+{
+    return (object.*member)(std::forward<Args>(args)...);
+}
+
+template <typename T, typename Object>
+T get_member(Object& object, Member<T, Object> member)
+{
+    return object.*member;
 }
 
 template <typename D, typename B>

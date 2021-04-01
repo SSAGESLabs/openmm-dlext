@@ -23,14 +23,6 @@ public:
     ForceKernel(std::string name, const OpenMM::Platform& platform)
       : OpenMM::KernelImpl(name, platform)
     { }
-
-    virtual void initialize(
-        OpenMM::ContextImpl& context, Force& force, Callback update
-    ) = 0;
-
-    virtual double execute(
-        OpenMM::ContextImpl& context, bool includeForces, bool includeEnergy
-    ) = 0;
 };
 
 

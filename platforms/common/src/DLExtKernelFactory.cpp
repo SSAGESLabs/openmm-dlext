@@ -15,35 +15,38 @@
 using namespace cxx11utils;
 using namespace DLExt;
 
+using OpenMMException = OpenMM::OpenMMException;
+using Platform = OpenMM::Platform;
+
 
 extern "C" DEFAULT_VISIBILITY void registerPlatforms() { }
 
 extern "C" DEFAULT_VISIBILITY void registerKernelFactories()
 {
-    for (int i = 0; i < OpenMM::Platform::getNumPlatforms(); i++) {
-        OpenMM::Platform& platform = OpenMM::Platform::getPlatform(i);
+    for (int i = 0; i < Platform::getNumPlatforms(); i++) {
+        auto& platform = Platform::getPlatform(i);
         registerKernelFactory(&platform);
     }
 }
 
 void registerKernelFactory(void* p)
 {
-    auto platform = dynamic_cast<OpenMM::Platform*>(p);
+    auto platform = dynamic_cast<Platform*>(static_cast<Platform*>(p));
     if (platform)
         registerKernelFactory(platform);
 
-    throw OpenMM::OpenMMException("Pointer to object is not an OpenMM::Platform*");
+    throw OpenMMException("Pointer to object is not an OpenMM::Platform*");
 }
 
-void registerKernelFactory(OpenMM::Platform* platform)
+void registerKernelFactory(Platform* platform)
 {
     if (isSupported(platform)) {
-        KernelFactory* factory = new KernelFactory();
+        auto factory = new KernelFactory();
         platform->registerKernelFactory(ForceKernel::Name(), factory);
     }
 }
 
-bool isSupported(OpenMM::Platform* platform)
+bool isSupported(Platform* platform)
 {
     // The first condition catches both Reference and CPU platforms.
     return dynamic_cast<OpenMM::ReferencePlatform*>(platform)
@@ -54,12 +57,12 @@ bool isSupported(OpenMM::Platform* platform)
 }
 
 OpenMM::KernelImpl* KernelFactory::createKernelImpl(
-    std::string name, const OpenMM::Platform& platform, OpenMM::ContextImpl& context
+    std::string name, const Platform& platform, OpenMM::ContextImpl& context
 ) const {
     if (name == ForceKernel::Name())
         return new ForceKernel(name, platform);
 
-    throw OpenMM::OpenMMException(
+    throw OpenMMException(
         (std::string("Tried to create illegal kernel with name '") + name + "'").c_str()
     );
 }
