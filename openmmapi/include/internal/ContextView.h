@@ -15,8 +15,6 @@ namespace DLExt
 
 using ReferencePlatformData = OpenMM::ReferencePlatform::PlatformData;
 using CudaPlatformData = OpenMM::CudaPlatform::PlatformData;
-using ReferenceArray = std::vector<OpenMM::Vec3>;
-using CudaArray = OpenMM::CudaArray;
 
 
 enum class IdsOrdering { Ordered, Forward, Reverse };
