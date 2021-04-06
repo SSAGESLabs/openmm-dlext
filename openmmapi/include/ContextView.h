@@ -4,9 +4,17 @@
 #ifndef OPENMM_DLEXT_CONTEXTVIEW_H_
 #define OPENMM_DLEXT_CONTEXTVIEW_H_
 
+#include <vector>
 
 #include "cxx11utils.h"
-#include "dlpack.h"
+#include "dlpack/dlpack.h"
+
+#include "openmm/OpenMMException.h"
+#include "openmm/internal/ContextImpl.h"
+#include "openmm/reference/ReferencePlatform.h"
+#ifdef OPENMM_BUILD_CUDA_LIB
+#include "openmm/cuda/CudaPlatform.h"
+#endif
 
 
 namespace DLExt
@@ -14,7 +22,9 @@ namespace DLExt
 
 
 using ReferencePlatformData = OpenMM::ReferencePlatform::PlatformData;
+#ifdef OPENMM_BUILD_CUDA_LIB
 using CudaPlatformData = OpenMM::CudaPlatform::PlatformData;
+#endif
 
 
 enum class IdsOrdering { Ordered, Forward, Reverse };
@@ -52,8 +62,11 @@ DLDeviceType deviceType();
 
 template <>
 constexpr DLDeviceType deviceType<ReferencePlatformData>() { return kDLCPU; }
+
+#ifdef OPENMM_BUILD_CUDA_LIB
 template <>
 constexpr DLDeviceType deviceType<CudaPlatformData>() { return kDLGPU; }
+#endif
 
 template <typename T>
 T& ContextView::platformData() const

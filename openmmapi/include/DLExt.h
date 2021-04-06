@@ -4,9 +4,17 @@
 #ifndef OPENMM_DLEXT_H_
 #define OPENMM_DLEXT_H_
 
+#include <vector>
 
 #include "cxx11utils.h"
 #include "dlpack.h"
+
+#include "ContextView.h"
+
+#include "openmm/Vec3.h"
+#ifdef OPENMM_BUILD_CUDA_LIB
+#include "openmm/CudaArray.h"
+#endif
 
 
 namespace DLExt
@@ -14,7 +22,9 @@ namespace DLExt
 
 
 using ReferenceArray = std::vector<OpenMM::Vec3>;
+#ifdef OPENMM_BUILD_CUDA_LIB
 using CudaArray = OpenMM::CudaArray;
+#endif
 
 
 static struct PositionsGetter     { } kPositions;
@@ -55,6 +65,8 @@ inline ReferenceArray& getProperty(ReferencePlatformData& pdata, ForcesGetter)
     return *pdata.forces;
 }
 
+#ifdef OPENMM_BUILD_CUDA_LIB
+
 inline CudaArray& getProperty(CudaPlatformData& pdata, PositionsGetter)
 {
     return pdata.contexts[0]->getPosq();
@@ -82,6 +94,8 @@ inline void* opaque(CudaArray& array)
     return (void*)(array.getDevicePointer());
 }
 
+#endif  // OPENMM_BUILD_CUDA_LIB
+
 template <typename T>
 inline void* opaque(const std::vector<T>& array)
 {
@@ -98,35 +112,40 @@ inline void* opaque(const ContextView& view, Property p)
 template <typename Property>
 inline void* opaque(const ContextView& view, Property p)
 {
-    if (view.deviceType() == kDLGPU) {
+#ifdef OPENMM_BUILD_CUDA_LIB
+    if (view.deviceType() == kDLGPU)
         return opaque<CudaPlatformData>(view, p);
-    }
+#endif
     return opaque<ReferencePlatformData>(view, p);
 }
 
 inline void* opaque(const ContextView& view, AtomIdsGetter)
 {
-    if (view.deviceType() == kDLGPU) {
+#ifdef OPENMM_BUILD_CUDA_LIB
+    if (view.deviceType() == kDLGPU)
         return opaque<CudaPlatformData>(view, kAtomIds);
-    }
+#endif
     return opaque(view.atomIds());
 }
 
 inline void* opaque(const ContextView& view, InverseMassesGetter)
 {
-    if (view.deviceType() == kDLGPU) {
-        // On the CudaPlatform inverse masses are stored along velocities
+#ifdef OPENMM_BUILD_CUDA_LIB
+    // On the CudaPlatform inverse masses are stored along velocities
+    if (view.deviceType() == kDLGPU)
         return opaque<CudaPlatformData>(view, kVelocities);
-    }
+#endif
     return opaque(view.inverseMasses());
 }
 
 inline DLContext deviceInfo(const ContextView& view)
 {
+#ifdef OPENMM_BUILD_CUDA_LIB
     if (view.deviceType() == kDLGPU) {
         auto& pdata = view.platformData<CudaPlatformData>();
         return DLContext { kDLGPU, pdata.contexts[0]->getDeviceIndex() };
     }
+#endif
     return DLContext { kDLCPU, 0 };
 }
 
@@ -153,16 +172,6 @@ constexpr DLDataType dtype(const ContextView& view, AtomIdsGetter)
 constexpr DLDataType dtype(const ContextView& view, InverseMassesGetter)
 {
     return dtype(view, kVelocities);
-}
-
-constexpr int64_t paddedSize(const ContextView& view)
-{
-    auto n = view.particleNumber();
-
-    if (view.deviceType() == kDLGPU)
-        return 32 * static_cast<int64_t>(std::ceil(n / 32.0));
-
-    return n;
 }
 
 constexpr int64_t paddedSize(int64_t n)
@@ -212,7 +221,7 @@ DLManagedTensor* wrap(
     auto bridge = make_unique<DLDataBridge>();
 
     bridge->tensor.manager_ctx = bridge.get();
-    bridge->tensor.deleter = DLDataBridgeDeleter;
+    bridge->tensor.deleter = _DLDataBridgeDeleter;
 
     auto& dltensor = bridge->tensor.dl_tensor;
     dltensor.data = opaque(view, property);

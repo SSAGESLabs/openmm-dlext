@@ -5,13 +5,13 @@
 #define OPENMM_DLEXT_FORCEIMPL_H_
 
 
-#include <set>
+#include <map>
 #include <string>
+#include <vector>
 
-#include "Force.h"
+#include "DLExtForce.h"
 
 #include "openmm/internal/ForceImpl.h"
-#include "openmm/Kernel.h"
 
 
 namespace DLExt
@@ -24,10 +24,9 @@ namespace DLExt
 class DEFAULT_VISIBILITY ForceImpl : public OpenMM::ForceImpl {
 public:
     ForceImpl(const Force& owner);
-    ~ForceImpl();
     void initialize(OpenMM::ContextImpl& context);
     const OpenMM::Force& getOwner() const;
-    void updateContextState(OpenMM::ContextImpl& context, bool& forcesInvalid) { }
+    void updateContextState(OpenMM::ContextImpl& context, bool& forcesInvalid);
     double calcForcesAndEnergy(
         OpenMM::ContextImpl& context, bool includeForces, bool includeEnergy, int groups
     );

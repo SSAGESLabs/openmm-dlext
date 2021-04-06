@@ -2,6 +2,7 @@
 // This file is part of `openmm-dlext`, see LICENSE.md
 
 #include "DLExtForce.h"
+#include "DLExtKernelFactory.h"
 #include "internal/DLExtForceImpl.h"
 
 #include "openmm/OpenMMException.h"
@@ -51,6 +52,11 @@ void Force::setCallbackIn(OpenMM::Context& context, Function<void>& callback)
 {
     auto& impl = reinterpret_cast<ForceImpl&>(getImplInContext(context));
     impl.setCallback(callback);
+}
+
+ContextView Force::view(OpenMM::Context& context)
+{
+    return ContextView(getContextImpl(context));
 }
 
 OpenMM::ForceImpl* Force::createImpl() const

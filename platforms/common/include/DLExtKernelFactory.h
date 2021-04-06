@@ -22,9 +22,9 @@ public:
     ) const;
 };
 
-void registerKernelFactory(void* platform);
-void registerKernelFactory(OpenMM::Platform* platform);
-bool isSupported(OpenMM::Platform* platform);
+void unsafe_registerKernelFactory(void* platform);
+void registerKernelFactory(OpenMM::Platform& platform);
+bool isSupported(OpenMM::Platform& platform);
 
 
 }  // namespace DLExt

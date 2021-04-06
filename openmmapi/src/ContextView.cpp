@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 // This file is part of `openmm-dlext`, see LICENSE.md
 
-#include "internal/ContextView.h"
+#include "ContextView.h"
+
+#include "openmm/OpenMMException.h"
+#include "openmm/cpu/CpuPlatform.h"
+#ifdef OPENMM_BUILD_CUDA_LIB
+#include "openmm/cuda/CudaContext.h"
+#endif
 
 
 using namespace DLExt;
@@ -36,6 +42,7 @@ ContextView::ContextView(OpenMM::ContextImpl& context)
         atom_ids[i] = i;
     }
 
+#ifdef OPENMM_BUILD_CUDA_LIB
     if (dtype == kDLGPU) {
         ids_ordering = IdsOrdering::Forward;
         auto data = reinterpret_cast<CudaPlatformData*>(pdata);
@@ -46,6 +53,7 @@ ContextView::ContextView(OpenMM::ContextImpl& context)
         }
         forces_type = kDLInt;
     }
+#endif
 }
 
 DLDeviceType ContextView::deviceType() const { return dtype; }

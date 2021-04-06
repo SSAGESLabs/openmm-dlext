@@ -7,7 +7,10 @@
 
 #include "cxx11utils.h"
 
+#include "ContextView.h"
+
 #include "openmm/Force.h"
+#include "openmm/System.h"
 
 
 namespace DLExt
@@ -16,6 +19,7 @@ namespace DLExt
 
 using namespace cxx11utils;
 
+
 //
 //  This class is meant to provide DLPack wrappers around the particle data of an OpenMM
 //  Simulation, but not to perform any direct computation. Instead, it provides a callback
@@ -23,9 +27,11 @@ using namespace cxx11utils;
 //
 class DEFAULT_VISIBILITY Force : public OpenMM::Force {
 public:
+    Force() { }
     bool usesPeriodicBoundaryConditions() const;
     void addTo(OpenMM::Context& context, OpenMM::System& system);
     void setCallbackIn(OpenMM::Context& context, Function<void>& callback);
+    ContextView view(OpenMM::Context& context);
 protected:
     OpenMM::ForceImpl* createImpl() const;
 private:

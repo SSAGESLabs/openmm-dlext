@@ -2,10 +2,12 @@
 // This file is part of `openmm-dlext`, see LICENSE.md
 
 #include "cxx11utils.h"
+
 #include "DLExtKernelFactory.h"
+#include "DLExtKernels.h"
 
 #include "openmm/OpenMMException.h"
-
+#include "openmm/cpu/CpuPlatform.h"
 #include "openmm/reference/ReferencePlatform.h"
 #ifdef OPENMM_BUILD_CUDA_LIB
 #include "openmm/cuda/CudaPlatform.h"
@@ -15,54 +17,49 @@
 using namespace cxx11utils;
 using namespace DLExt;
 
-using OpenMMException = OpenMM::OpenMMException;
-using Platform = OpenMM::Platform;
-
 
 extern "C" DEFAULT_VISIBILITY void registerPlatforms() { }
 
 extern "C" DEFAULT_VISIBILITY void registerKernelFactories()
 {
-    for (int i = 0; i < Platform::getNumPlatforms(); i++) {
-        auto& platform = Platform::getPlatform(i);
-        registerKernelFactory(&platform);
-    }
-}
-
-void registerKernelFactory(void* p)
-{
-    auto platform = dynamic_cast<Platform*>(static_cast<Platform*>(p));
-    if (platform)
+    for (int i = 0; i < OpenMM::Platform::getNumPlatforms(); i++) {
+        auto& platform = OpenMM::Platform::getPlatform(i);
         registerKernelFactory(platform);
-
-    throw OpenMMException("Pointer to object is not an OpenMM::Platform*");
-}
-
-void registerKernelFactory(Platform* platform)
-{
-    if (isSupported(platform)) {
-        auto factory = new KernelFactory();
-        platform->registerKernelFactory(ForceKernel::Name(), factory);
     }
 }
 
-bool isSupported(Platform* platform)
+void unsafe_registerKernelFactory(void* p)
 {
-    // The first condition catches both Reference and CPU platforms.
-    return dynamic_cast<OpenMM::ReferencePlatform*>(platform)
+    auto platform = static_cast<OpenMM::Platform*>(p);
+    if (platform)
+        registerKernelFactory(*platform);
+}
+
+void registerKernelFactory(OpenMM::Platform& platform)
+{
+    if (isSupported(platform))
+        platform.registerKernelFactory(ForceKernel::Name(), new KernelFactory());
+}
+
+bool isSupported(OpenMM::Platform& platform)
+{
+    const auto& id = typeid(platform);
+
+    return (id == typeid(OpenMM::ReferencePlatform)
+        ||  id == typeid(OpenMM::CpuPlatform)
 #ifdef OPENMM_BUILD_CUDA_LIB
-        || dynamic_cast<OpenMM::CudaPlatform*>(platform)
+        ||  id == typeid(OpenMM::CudaPlatform)
 #endif
-    ;
+    );
 }
 
 OpenMM::KernelImpl* KernelFactory::createKernelImpl(
-    std::string name, const Platform& platform, OpenMM::ContextImpl& context
+    std::string name, const OpenMM::Platform& platform, OpenMM::ContextImpl& context
 ) const {
     if (name == ForceKernel::Name())
         return new ForceKernel(name, platform);
 
-    throw OpenMMException(
-        (std::string("Tried to create illegal kernel with name '") + name + "'").c_str()
+    throw OpenMM::OpenMMException(
+        (std::string("Tried to create illegal kernel with name `") + name + "`").c_str()
     );
 }
