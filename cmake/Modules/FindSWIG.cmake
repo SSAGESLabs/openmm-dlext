@@ -137,11 +137,11 @@ if(SWIG_EXECUTABLE)
   endif()
 endif()
 
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(
   SWIG HANDLE_COMPONENTS
   REQUIRED_VARS SWIG_EXECUTABLE SWIG_DIR
   VERSION_VAR SWIG_VERSION
-  HANDLE_VERSION_RANGE)
+)
 
 mark_as_advanced(SWIG_DIR SWIG_VERSION SWIG_EXECUTABLE)

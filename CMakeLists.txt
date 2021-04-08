@@ -23,9 +23,5 @@ target_link_libraries(${PROJECT_NAME} PUBLIC OpenMM::OpenMM)
 
 # Install
 
-# Build the Python wrappers
-#if(BUILD_PYTHON_WRAPPERS)
-#  find_package(Python 3)
-#  find_package(SWIG)
-#  add_subdirectory(wrappers/python)
-#endif()
+# Build wrappers
+add_subdirectory(wrappers)
