@@ -7,22 +7,26 @@
 #  OpenMM_FOUND
 #
 
-if(DEFINED ENV{CONDA_EXE})
-    get_filename_component(CONDA_BIN_DIR $ENV{CONDA_EXE} DIRECTORY)
-    get_filename_component(CONDA_ROOT ${CONDA_BIN_DIR} DIRECTORY)
+if(NOT OpenMM_ROOT)
+    if(DEFINED ENV{CONDA_PREFIX})
+        set(OpenMM_ROOT ${CONDA_PREFIX})
+    elseif(DEFINED ENV{CONDA_EXE})
+        get_filename_component(CONDA_BIN_DIR $ENV{CONDA_EXE} DIRECTORY)
+        get_filename_component(OpenMM_ROOT ${CONDA_BIN_DIR} DIRECTORY)
+    endif()
 endif()
 
 find_path(OpenMM_INCLUDE_DIR
-    NAMES openmm/OpenMMException.h
-    HINTS "${CONDA_ROOT}/include"
+    NAMES OpenMM.h
+    HINTS "${OpenMM_ROOT}/include"
 )
 find_library(OpenMM_LIBRARY
     NAMES OpenMM
-    HINTS "${CONDA_ROOT}/lib"
+    HINTS "${OpenMM_ROOT}/lib"
 )
 find_library(OpenMM_CUDA_LIBRARY
     NAMES OpenMMCUDA
-    HINTS "${CONDA_ROOT}/lib"
+    HINTS "${OpenMM_ROOT}/lib"
 )
 
 mark_as_advanced(OpenMM_FOUND OpenMM_INCLUDE_DIR OpenMM_LIBRARY OpenMM_CUDA_LIBRARY)
@@ -44,9 +48,9 @@ if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
         "${OpenMM_INCLUDE_DIR}/openmm/common"
         "${OpenMM_INCLUDE_DIR}/openmm/cpu"
         "${OpenMM_INCLUDE_DIR}/openmm/cuda"
+        "${OpenMM_INCLUDE_DIR}/openmm/internal"
         "${OpenMM_INCLUDE_DIR}/openmm/opencl"
         "${OpenMM_INCLUDE_DIR}/openmm/reference"
-        "${OpenMM_INCLUDE_DIR}/openmm/internal"
     )
     if(OpenMM_CUDA_LIBRARY)
         target_compile_definitions(OpenMM::OpenMM INTERFACE OPENMM_BUILD_CUDA_LIB)
