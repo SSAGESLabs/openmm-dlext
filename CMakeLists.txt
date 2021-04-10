@@ -22,10 +22,26 @@ add_subdirectory(openmmapi)
 add_subdirectory(platforms)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
-target_include_directories(${PROJECT_NAME} PUBLIC include ${DLPack_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} PUBLIC OpenMM::OpenMM)
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_link_libraries(${PROJECT_NAME} PUBLIC OpenMM::OpenMM dlpack::dlpack)
 
 # Build wrappers
 add_subdirectory(wrappers)
 
 # Install
+include(GNUInstallDirs)
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    get_filename_component(OpenMM_ROOT_DIR ${OpenMM_INCLUDE_DIR} DIRECTORY)
+    set(CMAKE_INSTALL_PREFIX ${OpenMM_ROOT_DIR} CACHE PATH "" FORCE)
+endif()
+
+install(TARGETS ${PROJECT_NAME}
+    #EXPORT "${PROJECT_NAME}Targets"
+    LIBRARY DESTINATION lib
+    INCLUDES DESTINATION include
+)
+#install(EXPORT "${PROJECT_NAME}Targets"
+#    NAMESPACE "${PROJECT_NAME}::"
+#    DESTINATION "lib/cmake/${PROJECT_NAME}"
+#)
