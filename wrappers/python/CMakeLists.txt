@@ -17,16 +17,22 @@ add_custom_command(
 )
 add_custom_target(PySWIGWrapper DEPENDS ${SWIG_WRAPPER})
 
-Python_add_library("PySWIG${PROJECT_NAME}" MODULE "")
-add_dependencies("PySWIG${PROJECT_NAME}" PySWIGWrapper)
+# The name of the module should match the one declared in the SWIG headers
+set(PySWIG_MODULE_NAME "_dlpack_extension_swig")
 
-target_sources("PySWIG${PROJECT_NAME}" PRIVATE ${SWIG_WRAPPER})
-target_compile_features("PySWIG${PROJECT_NAME}" PRIVATE cxx_std_11)
-target_link_libraries("PySWIG${PROJECT_NAME}" PRIVATE ${PROJECT_NAME})
+Python_add_library(${PySWIG_MODULE_NAME} MODULE "")
+add_dependencies(${PySWIG_MODULE_NAME} PySWIGWrapper)
+
+target_sources(${PySWIG_MODULE_NAME} PRIVATE ${SWIG_WRAPPER})
+target_compile_features(${PySWIG_MODULE_NAME} PRIVATE cxx_std_11)
+target_link_libraries(${PySWIG_MODULE_NAME} PRIVATE ${PROJECT_NAME})
 
 # We then build a Python API for the rest of the main library with pybind11
-pybind11_add_module("Py${PROJECT_NAME}" MODULE "")
+# The name of the module should match the one declared within the source code
+set(pybind11_MODULE_NAME "dlpack_extension")
 
-target_sources("Py${PROJECT_NAME}" PRIVATE PyDLExt.cpp)
-target_compile_features("Py${PROJECT_NAME}" PRIVATE cxx_std_11)
-target_link_libraries("Py${PROJECT_NAME}" PRIVATE ${PROJECT_NAME})
+pybind11_add_module(${pybind11_MODULE_NAME} MODULE "")
+
+target_sources(${pybind11_MODULE_NAME} PRIVATE PyDLExt.cpp)
+target_compile_features(${pybind11_MODULE_NAME} PRIVATE cxx_std_11)
+target_link_libraries(${pybind11_MODULE_NAME} PRIVATE ${PROJECT_NAME})
