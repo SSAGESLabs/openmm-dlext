@@ -24,22 +24,26 @@ find_library(OpenMM_LIBRARY
     NAMES OpenMM
     HINTS "${OpenMM_ROOT}/lib"
 )
+find_library(OpenMM_CPU_LIBRARY
+    NAMES OpenMMCPU
+    HINTS "${OpenMM_ROOT}/lib"
+)
 find_library(OpenMM_CUDA_LIBRARY
     NAMES OpenMMCUDA
     HINTS "${OpenMM_ROOT}/lib"
 )
-find_library(OpenMM_CUFFT_LIBRARY
+find_library(CUFFT_LIBRARY
     NAMES cufft
     HINTS "${OpenMM_ROOT}/lib"
 )
 mark_as_advanced(
-    OpenMM_FOUND OpenMM_INCLUDE_DIR OpenMM_LIBRARY
-    OpenMM_CUDA_LIBRARY OpenMM_CUFFT_LIBRARY
+    OpenMM_FOUND OpenMM_INCLUDE_DIR OpenMM_LIBRARY OpenMM_CPU_LIBRARY
+    OpenMM_CUDA_LIBRARY CUFFT_LIBRARY
 )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(OpenMM
-    REQUIRED_VARS OpenMM_INCLUDE_DIR OpenMM_LIBRARY
+    REQUIRED_VARS OpenMM_INCLUDE_DIR OpenMM_LIBRARY OpenMM_CPU_LIBRARY
 )
 
 if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
@@ -58,11 +62,13 @@ if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
         "${OpenMM_INCLUDE_DIR}/openmm/opencl"
         "${OpenMM_INCLUDE_DIR}/openmm/reference"
     )
+    target_link_libraries(OpenMM::OpenMM INTERFACE
+        ${OpenMM_LIBRARY} ${OpenMM_CPU_LIBRARY}
+    )
     if(OpenMM_CUDA_LIBRARY)
         target_compile_definitions(OpenMM::OpenMM INTERFACE OPENMM_BUILD_CUDA_LIB)
-        set_target_properties(OpenMM::OpenMM PROPERTIES
-            INTERFACE_LINK_LIBRARIES
-                "${OpenMM_LIBRARY};${OpenMM_CUDA_LIBRARY};${OpenMM_CUFFT_LIBRARY}"
+        target_link_libraries(OpenMM::OpenMM INTERFACE
+            ${OpenMM_CUDA_LIBRARY} ${CUFFT_LIBRARY}
         )
     endif()
 endif()
