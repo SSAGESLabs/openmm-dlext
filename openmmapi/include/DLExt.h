@@ -150,29 +150,29 @@ inline DLContext deviceInfo(const ContextView& view)
     return DLContext { kDLCPU, 0 };
 }
 
-inline DLDataType dtype(const ContextView& view, PositionsGetter)
+inline DLDataType dType(const ContextView& view, PositionsGetter)
 {
     return DLDataType { kDLFloat, view.posPrecBits(), 1 };
 }
 
-inline DLDataType dtype(const ContextView& view, VelocitiesGetter)
+inline DLDataType dType(const ContextView& view, VelocitiesGetter)
 {
     return DLDataType { kDLFloat, view.velPrecBits(), 1 };
 }
 
-inline DLDataType dtype(const ContextView& view, ForcesGetter)
+inline DLDataType dType(const ContextView& view, ForcesGetter)
 {
     return DLDataType { view.forcesTypeCode(), 64, 1 };
 }
 
-constexpr DLDataType dtype(const ContextView& view, AtomIdsGetter)
+constexpr DLDataType dType(const ContextView& view, AtomIdsGetter)
 {
     return DLDataType { kDLInt, 32, 1 };
 }
 
-inline DLDataType dtype(const ContextView& view, InverseMassesGetter)
+inline DLDataType dType(const ContextView& view, InverseMassesGetter)
 {
-    return dtype(view, kVelocities);
+    return dType(view, kVelocities);
 }
 
 constexpr int64_t paddedSize(int64_t n)
@@ -227,7 +227,7 @@ DLManagedTensor* wrap(
     auto& dltensor = bridge->tensor.dl_tensor;
     dltensor.data = opaque(view, property);
     dltensor.device = deviceInfo(view);
-    dltensor.dtype = dtype(view, property);
+    dltensor.dtype = dType(view, property);
 
     auto& shape = bridge->shape;
     auto size2 = size(view, property, kSecondDim);

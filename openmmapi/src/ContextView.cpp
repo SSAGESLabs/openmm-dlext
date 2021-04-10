@@ -13,7 +13,7 @@
 using namespace DLExt;
 
 
-DLDeviceType deviceType(OpenMM::Platform& platform)
+DLDeviceType DLExt::dlDeviceType(OpenMM::Platform& platform)
 {
     const auto& id = typeid(platform);
 
@@ -30,7 +30,7 @@ DLDeviceType deviceType(OpenMM::Platform& platform)
 ContextView::ContextView(OpenMM::ContextImpl& context)
     : ctx { &context }
 {
-    dtype = DLExt::deviceType(ctx->getPlatform());  // disambiguate from member function
+    dtype = dlDeviceType(ctx->getPlatform());
     pdata = ctx->getPlatformData();
 
     auto& system = ctx->getSystem();

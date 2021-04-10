@@ -56,23 +56,23 @@ private:
 };
 
 
-DLDeviceType deviceType(OpenMM::Platform& platform);
+DLDeviceType dlDeviceType(OpenMM::Platform& platform);
 
 template <typename T>
-DLDeviceType deviceType();
+DLDeviceType dlDeviceType();
 
 template <>
-constexpr DLDeviceType deviceType<ReferencePlatformData>() { return kDLCPU; }
+constexpr DLDeviceType dlDeviceType<ReferencePlatformData>() { return kDLCPU; }
 
 #ifdef OPENMM_BUILD_CUDA_LIB
 template <>
-constexpr DLDeviceType deviceType<CudaPlatformData>() { return kDLGPU; }
+constexpr DLDeviceType dlDeviceType<CudaPlatformData>() { return kDLGPU; }
 #endif
 
 template <typename T>
 T& ContextView::platformData() const
 {
-    if (DLExt::deviceType<T>() == dtype)
+    if (dlDeviceType<T>() == dtype)
         return *reinterpret_cast<T*>(pdata);
     throw OpenMM::OpenMMException(
         "The requested type does not match the one of the stored data"
