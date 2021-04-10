@@ -7,13 +7,14 @@
 #include <vector>
 
 #include "cxx11utils.h"
-#include "dlpack.h"
+#include "dlpack/dlpack.h"
 
 #include "ContextView.h"
 
 #include "openmm/Vec3.h"
 #ifdef OPENMM_BUILD_CUDA_LIB
-#include "openmm/CudaArray.h"
+#include "openmm/cuda/CudaArray.h"
+#include "openmm/cuda/CudaContext.h"
 #endif
 
 
@@ -149,17 +150,17 @@ inline DLContext deviceInfo(const ContextView& view)
     return DLContext { kDLCPU, 0 };
 }
 
-constexpr DLDataType dtype(const ContextView& view, PositionsGetter)
+inline DLDataType dtype(const ContextView& view, PositionsGetter)
 {
     return DLDataType { kDLFloat, view.posPrecBits(), 1 };
 }
 
-constexpr DLDataType dtype(const ContextView& view, VelocitiesGetter)
+inline DLDataType dtype(const ContextView& view, VelocitiesGetter)
 {
     return DLDataType { kDLFloat, view.velPrecBits(), 1 };
 }
 
-constexpr DLDataType dtype(const ContextView& view, ForcesGetter)
+inline DLDataType dtype(const ContextView& view, ForcesGetter)
 {
     return DLDataType { view.forcesTypeCode(), 64, 1 };
 }
@@ -169,7 +170,7 @@ constexpr DLDataType dtype(const ContextView& view, AtomIdsGetter)
     return DLDataType { kDLInt, 32, 1 };
 }
 
-constexpr DLDataType dtype(const ContextView& view, InverseMassesGetter)
+inline DLDataType dtype(const ContextView& view, InverseMassesGetter)
 {
     return dtype(view, kVelocities);
 }
@@ -179,29 +180,29 @@ constexpr int64_t paddedSize(int64_t n)
     return (n % 32 == 0) ? n : 32 * (n / 32 + 1);
 }
 
-constexpr int64_t paddedSize(const ContextView& view, int64_t n)
+inline int64_t paddedSize(const ContextView& view, int64_t n)
 {
     return view.deviceType() == kDLGPU ? paddedSize(n) : n;
 }
 
 template <typename PropertyGetter>
-constexpr int64_t size(const ContextView& view, PropertyGetter)
+inline int64_t size(const ContextView& view, PropertyGetter)
 {
     return paddedSize(view, view.particleNumber());
 }
 
-constexpr int64_t size(const ContextView& view, ForcesGetter)
+inline int64_t size(const ContextView& view, ForcesGetter)
 {
     return view.deviceType() == kDLGPU ? 3 : view.particleNumber();
 }
 
 template <typename PropertyGetter>
-constexpr int64_t size(const ContextView& view, PropertyGetter, SecondDim)
+inline int64_t size(const ContextView& view, PropertyGetter, SecondDim)
 {
     return view.deviceType() == kDLGPU ? 4 : 3;
 }
 
-constexpr int64_t size(const ContextView& view, ForcesGetter, SecondDim)
+inline int64_t size(const ContextView& view, ForcesGetter, SecondDim)
 {
     return view.deviceType() == kDLGPU ? paddedSize(view.particleNumber()) : 3;
 }
@@ -225,7 +226,7 @@ DLManagedTensor* wrap(
 
     auto& dltensor = bridge->tensor.dl_tensor;
     dltensor.data = opaque(view, property);
-    dltensor.ctx = deviceInfo(view);
+    dltensor.device = deviceInfo(view);
     dltensor.dtype = dtype(view, property);
 
     auto& shape = bridge->shape;
@@ -247,7 +248,33 @@ DLManagedTensor* wrap(
     return &(bridge.release()->tensor);
 }
 
-}  // DLExt
+inline DLManagedTensor* positions(const ContextView& view)
+{
+    return wrap(view, kPositions);
+}
+
+inline DLManagedTensor* velocities(const ContextView& view)
+{
+    return wrap(view, kVelocities);
+}
+
+inline DLManagedTensor* forces(const ContextView& view)
+{
+    return wrap(view, kForces);
+}
+
+inline DLManagedTensor* atomIds(const ContextView& view)
+{
+    return wrap(view, kAtomIds);
+}
+
+inline DLManagedTensor* inverseMasses(const ContextView& view)
+{
+    return wrap(view, kInverseMasses);
+}
+
+
+}  // namespace DLExt
 
 
 #endif  // OPENMM_DLEXT_H_

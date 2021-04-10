@@ -9,6 +9,7 @@
 #include "cxx11utils.h"
 #include "dlpack/dlpack.h"
 
+#include "openmm/Context.h"
 #include "openmm/OpenMMException.h"
 #include "openmm/internal/ContextImpl.h"
 #include "openmm/reference/ReferencePlatform.h"
