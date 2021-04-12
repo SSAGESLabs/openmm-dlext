@@ -14,6 +14,9 @@ if(NOT OpenMM_ROOT)
     get_filename_component(CONDA_BIN_DIR $ENV{CONDA_EXE} DIRECTORY)
     get_filename_component(OpenMM_ROOT ${CONDA_BIN_DIR} DIRECTORY)
   endif()
+endif()
+
+if(NOT OpenMM_ROOT)
   if(Python_EXECUTABLE)
     set(find_openmm_script "
 from __future__ import print_function;
