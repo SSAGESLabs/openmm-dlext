@@ -27,7 +27,6 @@ import simtk.openmm as openmm
 print(os.path.dirname(openmm.version.openmm_library_path), end='')")
     execute_process(COMMAND ${Python_EXECUTABLE} -c "${find_openmm_script}"
       OUTPUT_VARIABLE OpenMM_ROOT)
-    message("asdf ${OpenMM_ROOT}")
     endif(Python_EXECUTABLE)
 endif()
 
