@@ -18,19 +18,19 @@ endif()
 
 find_path(OpenMM_INCLUDE_DIR
     NAMES OpenMM.h
-    HINTS "${OpenMM_ROOT}/include"
+    HINTS "${OpenMM_ROOT}/include" "$ENV{OpenMM_ROOT}/include"
 )
 find_library(OpenMM_LIBRARY
     NAMES OpenMM
-    HINTS "${OpenMM_ROOT}/lib"
+    HINTS "${OpenMM_ROOT}/lib" "$ENV{OpenMM_ROOT}/lib"
 )
 find_library(OpenMM_CPU_LIBRARY
     NAMES OpenMMCPU
-    HINTS "${OpenMM_ROOT}/lib/plugins"
+    HINTS "${OpenMM_ROOT}/lib/plugins" "$ENV{OpenMM_ROOT}/lib/plugins"
 )
 find_library(OpenMM_CUDA_LIBRARY
     NAMES OpenMMCUDA
-    HINTS "${OpenMM_ROOT}/lib/plugins"
+    HINTS "${OpenMM_ROOT}/lib/plugins" "$ENV{OpenMM_ROOT}/lib/plugins"
 )
 mark_as_advanced(
     OpenMM_FOUND OpenMM_INCLUDE_DIR OpenMM_LIBRARY OpenMM_CPU_LIBRARY
