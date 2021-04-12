@@ -21,11 +21,13 @@ if(NOT OpenMM_ROOT)
   if(Python_EXECUTABLE)
     set(find_openmm_script "
 from __future__ import print_function;
-import sys, os; sys.stdout = open(os.devnull, 'w')
-import openmm
-print(os.path.dirname(openmm.version.openmm_library_path), file=sys.stderr, end='')")
+import sys, os;
+import simtk
+import simtk.openmm as openmm
+print(os.path.dirname(openmm.version.openmm_library_path), end='')")
     execute_process(COMMAND ${Python_EXECUTABLE} -c "${find_openmm_script}"
-      ERROR_VARIABLE OpenMM_ROOT)
+      OUTPUT_VARIABLE OpenMM_ROOT)
+    message("asdf ${OpenMM_ROOT}")
     endif(Python_EXECUTABLE)
 endif()
 
