@@ -26,19 +26,15 @@ find_library(OpenMM_LIBRARY
 )
 find_library(OpenMM_CPU_LIBRARY
     NAMES OpenMMCPU
-    HINTS "${OpenMM_ROOT}/lib"
+    HINTS "${OpenMM_ROOT}/lib" "${OpenMM_ROOT}/lib/plugins"
 )
 find_library(OpenMM_CUDA_LIBRARY
     NAMES OpenMMCUDA
-    HINTS "${OpenMM_ROOT}/lib"
-)
-find_library(CUFFT_LIBRARY
-    NAMES cufft
-    HINTS "${OpenMM_ROOT}/lib"
+    HINTS "${OpenMM_ROOT}/lib" "${OpenMM_ROOT}/lib/plugins"
 )
 mark_as_advanced(
     OpenMM_FOUND OpenMM_INCLUDE_DIR OpenMM_LIBRARY OpenMM_CPU_LIBRARY
-    OpenMM_CUDA_LIBRARY CUFFT_LIBRARY
+    OpenMM_CUDA_LIBRARY
 )
 
 include(FindPackageHandleStandardArgs)
@@ -55,11 +51,8 @@ if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
     )
     target_include_directories(OpenMM::OpenMM INTERFACE
         "${OpenMM_INCLUDE_DIR}/openmm"
-        "${OpenMM_INCLUDE_DIR}/openmm/common"
         "${OpenMM_INCLUDE_DIR}/openmm/cpu"
-        "${OpenMM_INCLUDE_DIR}/openmm/cuda"
         "${OpenMM_INCLUDE_DIR}/openmm/internal"
-        "${OpenMM_INCLUDE_DIR}/openmm/opencl"
         "${OpenMM_INCLUDE_DIR}/openmm/reference"
     )
     target_link_libraries(OpenMM::OpenMM INTERFACE
@@ -67,8 +60,13 @@ if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
     )
     if(OpenMM_CUDA_LIBRARY)
         target_compile_definitions(OpenMM::OpenMM INTERFACE OPENMM_BUILD_CUDA_LIB)
+        target_include_directories(OpenMM::OpenMM INTERFACE
+            "${OpenMM_INCLUDE_DIR}/openmm/common"
+            "${OpenMM_INCLUDE_DIR}/openmm/cuda"
+            "${OpenMM_INCLUDE_DIR}/openmm/opencl"
+        )
         target_link_libraries(OpenMM::OpenMM INTERFACE
-            ${OpenMM_CUDA_LIBRARY} ${CUFFT_LIBRARY}
+            ${OpenMM_CUDA_LIBRARY}
         )
     endif()
 endif()
