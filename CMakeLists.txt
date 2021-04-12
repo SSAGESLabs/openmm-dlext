@@ -10,6 +10,7 @@ project(OpenMMDLExt LANGUAGES CXX)
 set(PROJECT_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_MODULE_PATH})
 
+find_package(Python REQUIRED COMPONENTS Interpreter Development)
 find_package(OpenMM REQUIRED)
 
 include("${PROJECT_MODULE_PATH}/FetchCPM.cmake")

@@ -1,4 +1,3 @@
-find_package(Python REQUIRED COMPONENTS Interpreter Development)
 find_package(SWIG REQUIRED COMPONENTS python)
 
 include(${PROJECT_MODULE_PATH}/Fetchpybind11.cmake)

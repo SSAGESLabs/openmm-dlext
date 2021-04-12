@@ -8,12 +8,21 @@
 #
 
 if(NOT OpenMM_ROOT)
-    if(DEFINED ENV{CONDA_PREFIX})
-        set(OpenMM_ROOT ${CONDA_PREFIX})
-    elseif(DEFINED ENV{CONDA_EXE})
-        get_filename_component(CONDA_BIN_DIR $ENV{CONDA_EXE} DIRECTORY)
-        get_filename_component(OpenMM_ROOT ${CONDA_BIN_DIR} DIRECTORY)
-    endif()
+  if(DEFINED ENV{CONDA_PREFIX})
+    set(OpenMM_ROOT ${CONDA_PREFIX})
+  elseif(DEFINED ENV{CONDA_EXE})
+    get_filename_component(CONDA_BIN_DIR $ENV{CONDA_EXE} DIRECTORY)
+    get_filename_component(OpenMM_ROOT ${CONDA_BIN_DIR} DIRECTORY)
+  endif()
+  if(Python_EXECUTABLE)
+    set(find_openmm_script "
+from __future__ import print_function;
+import sys, os; sys.stdout = open(os.devnull, 'w')
+import openmm
+print(os.path.dirname(openmm.version.openmm_library_path), file=sys.stderr, end='')")
+    execute_process(COMMAND ${Python_EXECUTABLE} -c "${find_openmm_script}"
+      ERROR_VARIABLE OpenMM_ROOT)
+    endif(Python_EXECUTABLE)
 endif()
 
 find_path(OpenMM_INCLUDE_DIR
