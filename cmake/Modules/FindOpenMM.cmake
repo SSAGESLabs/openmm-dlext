@@ -17,6 +17,7 @@ if(NOT OpenMM_ROOT)
 endif()
 
 if(NOT OpenMM_ROOT)
+  find_package(Python COMPONENTS Interpreter)
   if(Python_EXECUTABLE)
     set(find_openmm_script "
 from __future__ import print_function;
