@@ -26,11 +26,11 @@ find_library(OpenMM_LIBRARY
 )
 find_library(OpenMM_CPU_LIBRARY
     NAMES OpenMMCPU
-    HINTS "${OpenMM_ROOT}/lib" "${OpenMM_ROOT}/lib/plugins"
+    HINTS "${OpenMM_ROOT}/lib/plugins"
 )
 find_library(OpenMM_CUDA_LIBRARY
     NAMES OpenMMCUDA
-    HINTS "${OpenMM_ROOT}/lib" "${OpenMM_ROOT}/lib/plugins"
+    HINTS "${OpenMM_ROOT}/lib/plugins"
 )
 mark_as_advanced(
     OpenMM_FOUND OpenMM_INCLUDE_DIR OpenMM_LIBRARY OpenMM_CPU_LIBRARY
