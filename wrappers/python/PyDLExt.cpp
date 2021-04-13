@@ -12,10 +12,10 @@ namespace py = pybind11;
 namespace
 {
 
-Force& toForce(py::capsule& capsule)
+Force* toForcePtr(py::capsule& capsule)
 {
     if (strcmp(capsule.name(), "DLExt::Force") == 0)
-        return cast<Force>(capsule);
+        return &cast<Force>(capsule);
     throw py::type_error("Cannot convert the object to a DLExt::Force");
 }
 
@@ -54,7 +54,7 @@ void export_ContextView(py::module& m)
 void export_Force(py::module& m)
 {
     py::class_<Force>(m, "Force")
-        .def(py::init( [](py::capsule& force) { return &toForce(force); } ),
+        .def(py::init( [](py::capsule& force) { return toForcePtr(force); } ),
             py::return_value_policy::reference
         )
         .def("add_to",
