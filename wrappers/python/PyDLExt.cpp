@@ -9,15 +9,42 @@ using namespace DLExt;
 namespace py = pybind11;
 
 
+namespace
+{
+
+Force& toForce(py::capsule& capsule)
+{
+    if (strcmp(capsule.name(), "DLExt::Force") == 0)
+        return cast<Force>(capsule);
+    throw py::type_error("Cannot convert the object to a DLExt::Force");
+}
+
+OpenMM::Context& toContext(py::capsule& capsule)
+{
+    if (strcmp(capsule.name(), "OpenMM::Context") == 0)
+        return cast<OpenMM::Context>(capsule);
+    throw py::type_error("Cannot convert the object to a OpenMM::Context");
+}
+
+OpenMM::System& toSystem(py::capsule& capsule)
+{
+    if (strcmp(capsule.name(), "OpenMM::System") == 0)
+        return cast<OpenMM::System>(capsule);
+    throw py::type_error("Cannot convert the object to a OpenMM::System");
+}
+
+}
+
+
 void export_ContextView(py::module& m)
 {
     // ContextView can only be constructed from the Force::view factory
     py::class_<ContextView>(m, "ContextView")
         .def(py::init(
             [](Force& force, py::capsule& context) {
-                return force.view(cast<OpenMM::Context>(context));
-            }
-        ))
+                return force.view(toContext(context));
+            })
+        )
         .def("device_type", &ContextView::deviceType)
         .def("particle_number", &ContextView::particleNumber)
         .def("ids_ordering", &ContextView::idsOrdering)
@@ -27,15 +54,17 @@ void export_ContextView(py::module& m)
 void export_Force(py::module& m)
 {
     py::class_<Force>(m, "Force")
-        .def(py::init<>())
+        .def(py::init( [](py::capsule& force) { return &toForce(force); } ),
+            py::return_value_policy::reference
+        )
         .def("add_to",
             [](Force& self, py::capsule& context, py::capsule& system) {
-                self.addTo(cast<OpenMM::Context>(context), cast<OpenMM::System>(system));
+                self.addTo(toContext(context), toSystem(system));
             }
         )
         .def("set_callback_in",
             [](Force& self, py::capsule& context, Function<void>& callback) {
-                self.setCallbackIn(cast<OpenMM::Context>(context), callback);
+                self.setCallbackIn(toContext(context), callback);
             }
         )
         .def("view",
@@ -54,15 +83,10 @@ PYBIND11_MODULE(dlpack_extension, m)
         .value("CPU", kDLCPU)
         .value("GPU", kDLGPU)
     ;
-    py::enum_<DLDataTypeCode>(m, "DLType")
-        .value("Int", kDLInt)
-        .value("UInt", kDLUInt)
-        .value("Float", kDLFloat)
-    ;
     py::enum_<IdsOrdering>(m, "IdsOrdering")
         .value("Ordered", IdsOrdering::Ordered)
-        .value("UInt", IdsOrdering::Forward)
-        .value("Float", IdsOrdering::Reverse)
+        .value("Forward", IdsOrdering::Forward)
+        .value("Reverse", IdsOrdering::Reverse)
     ;
 
     // Classes

@@ -44,7 +44,6 @@ ContextView::ContextView(OpenMM::ContextImpl& context)
 
 #ifdef OPENMM_BUILD_CUDA_LIB
     if (dtype == kDLGPU) {
-        ids_ordering = IdsOrdering::Forward;
         auto data = reinterpret_cast<CudaPlatformData*>(pdata);
         if (!data->contexts[0]->getUseDoublePrecision()) {
             pos_bits = 32;
@@ -52,6 +51,7 @@ ContextView::ContextView(OpenMM::ContextImpl& context)
                 vel_bits = 32;
         }
         forces_type = kDLInt;
+        ids_ordering = IdsOrdering::Forward;
     }
 #endif
 }
