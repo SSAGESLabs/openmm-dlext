@@ -32,14 +32,10 @@ class Force(Force):
 
 dlpack_extension = None
 dlpack_extension_swig = None
-to_capsule = None
-to_force = None
 _dlpack_extension = None
 _dlpack_extension_swig = None
 
 del dlpack_extension
 del dlpack_extension_swig
-del to_capsule
-del to_force
 del _dlpack_extension
 del _dlpack_extension_swig
