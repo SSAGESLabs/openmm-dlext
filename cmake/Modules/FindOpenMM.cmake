@@ -86,9 +86,7 @@ if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
     if(OpenMM_CUDA_LIBRARY)
         target_compile_definitions(OpenMM::OpenMM INTERFACE OPENMM_BUILD_CUDA_LIB)
         target_include_directories(OpenMM::OpenMM INTERFACE
-            "${OpenMM_INCLUDE_DIR}/openmm/common"
             "${OpenMM_INCLUDE_DIR}/openmm/cuda"
-            "${OpenMM_INCLUDE_DIR}/openmm/opencl"
         )
         target_link_libraries(OpenMM::OpenMM INTERFACE
             ${OpenMM_CUDA_LIBRARY}
