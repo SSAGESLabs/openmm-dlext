@@ -50,64 +50,69 @@ void _DLDataBridgeDeleter(DLManagedTensor* tensor)
 }
 
 // Uniform interface for property extraction
+// `opaque` returns a `void*` with the memory address of an array or stored property
 
-inline ReferenceArray& getProperty(ReferencePlatformData& pdata, PositionsGetter)
+template <typename T>
+inline void* opaque(const T* array)
 {
-    return *pdata.positions;
+    return (void*)(array);
 }
 
-inline ReferenceArray& getProperty(ReferencePlatformData& pdata, VelocitiesGetter)
+template <typename T>
+inline void* opaque(const std::vector<T>* array)
 {
-    return *pdata.velocities;
+    return (void*)(array->data());
 }
 
-inline ReferenceArray& getProperty(ReferencePlatformData& pdata, ForcesGetter)
+inline void* opaque(ReferencePlatformData& pdata, PositionsGetter)
 {
-    return *pdata.forces;
+    return opaque(pdata.positions);
+}
+
+inline void* opaque(ReferencePlatformData& pdata, VelocitiesGetter)
+{
+    return opaque(pdata.velocities);
+}
+
+inline void* opaque(ReferencePlatformData& pdata, ForcesGetter)
+{
+    return opaque(pdata.forces);
 }
 
 #ifdef OPENMM_BUILD_CUDA_LIB
-
-inline CudaArray& getProperty(CudaPlatformData& pdata, PositionsGetter)
-{
-    return pdata.contexts[0]->getPosq();
-}
-
-inline CudaArray& getProperty(CudaPlatformData& pdata, VelocitiesGetter)
-{
-    return pdata.contexts[0]->getVelm();
-}
-
-inline CudaArray& getProperty(CudaPlatformData& pdata, ForcesGetter)
-{
-    return pdata.contexts[0]->getForce();
-}
-
-inline CudaArray& getProperty(CudaPlatformData& pdata, AtomIdsGetter)
-{
-    return pdata.contexts[0]->getAtomIndexArray();
-}
-
-// `opaque` returns a `void*` with the memory address of an array or stored property
 
 inline void* opaque(CudaArray& array)
 {
     return (void*)(array.getDevicePointer());
 }
 
-#endif  // OPENMM_BUILD_CUDA_LIB
-
-template <typename T>
-inline void* opaque(const std::vector<T>& array)
+inline void* opaque(CudaPlatformData& pdata, PositionsGetter)
 {
-    return (void*)(array.data());
+    return opaque(pdata.contexts[0]->getPosq());
 }
+
+inline void* opaque(CudaPlatformData& pdata, VelocitiesGetter)
+{
+    return opaque(pdata.contexts[0]->getVelm());
+}
+
+inline void* opaque(CudaPlatformData& pdata, ForcesGetter)
+{
+    return opaque(pdata.contexts[0]->getForce());
+}
+
+inline void* opaque(CudaPlatformData& pdata, AtomIdsGetter)
+{
+    return opaque(pdata.contexts[0]->getAtomIndexArray());
+}
+
+#endif  // OPENMM_BUILD_CUDA_LIB
 
 template <typename PlatformData, typename Property>
 inline void* opaque(const ContextView& view, Property p)
 {
     auto& pdata = view.platformData<PlatformData>();
-    return opaque(getProperty(pdata, p));
+    return opaque(pdata, p);
 }
 
 template <typename Property>
@@ -126,7 +131,7 @@ inline void* opaque(const ContextView& view, AtomIdsGetter)
     if (view.deviceType() == kDLGPU)
         return opaque<CudaPlatformData>(view, kAtomIds);
 #endif
-    return opaque(view.atomIds());
+    return opaque(view.atomIds().data());
 }
 
 inline void* opaque(const ContextView& view, InverseMassesGetter)
@@ -136,7 +141,7 @@ inline void* opaque(const ContextView& view, InverseMassesGetter)
     if (view.deviceType() == kDLGPU)
         return opaque<CudaPlatformData>(view, kVelocities);
 #endif
-    return opaque(view.inverseMasses());
+    return opaque(view.inverseMasses().data());
 }
 
 inline DLContext deviceInfo(const ContextView& view)
