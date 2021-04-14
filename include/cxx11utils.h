@@ -49,7 +49,7 @@ using Member = T Object::*;
 //  Functions
 //
 template <typename T>
-constexpr void maybe_unused(T&&) { }
+inline void maybe_unused(T&&) { }
 
 // `make_unique` for C++11
 template <typename T, typename ...Args>

@@ -59,7 +59,7 @@ private:
 DLDeviceType dlDeviceType(OpenMM::Platform& platform);
 
 template <typename T>
-DLDeviceType dlDeviceType();
+constexpr DLDeviceType dlDeviceType();
 
 template <>
 constexpr DLDeviceType dlDeviceType<ReferencePlatformData>() { return kDLCPU; }
