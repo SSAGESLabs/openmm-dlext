@@ -9,7 +9,7 @@ using namespace DLExt;
 
 
 ForceImpl::ForceImpl(const Force& owner)
-  : owner { owner }
+  : owner(owner)
 { }
 
 void ForceImpl::initialize(OpenMM::ContextImpl& context) { }
