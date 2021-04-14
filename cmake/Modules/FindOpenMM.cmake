@@ -9,7 +9,11 @@
 
 include("${PROJECT_MODULE_PATH}/OpenMMTools.cmake")
 
-if(NOT OpenMM_ROOT AND NOT ENV{OpenMM_ROOT})
+if(NOT OpenMM_ROOT AND DEFINED ENV{OpenMM_ROOT})
+    set(OpenMM_ROOT $ENV{OpenMM_ROOT})
+endif()
+
+if(NOT OpenMM_ROOT)
     if(DEFINED ENV{CONDA_PREFIX})
         set(OpenMM_ROOT $ENV{CONDA_PREFIX})
         set(OpenMM_Python_EXECUTABLE "$ENV{CONDA_PREFIX}/bin/python")
@@ -20,25 +24,25 @@ if(NOT OpenMM_ROOT AND NOT ENV{OpenMM_ROOT})
     endif()
 endif()
 
-if(NOT OpenMM_ROOT AND NOT ENV{OpenMM_ROOT})
+if(NOT OpenMM_ROOT)
     find_openmm_with_python()
 endif()
 
 find_path(OpenMM_INCLUDE_DIR
     NAMES OpenMM.h
-    HINTS "${OpenMM_ROOT}/include" "$ENV{OpenMM_ROOT}/include"
+    HINTS "${OpenMM_ROOT}/include"
 )
 find_library(OpenMM_LIBRARY
     NAMES OpenMM
-    HINTS "${OpenMM_ROOT}/lib" "$ENV{OpenMM_ROOT}/lib"
+    HINTS "${OpenMM_ROOT}/lib"
 )
 find_library(OpenMM_CPU_LIBRARY
     NAMES OpenMMCPU
-    HINTS "${OpenMM_ROOT}/lib/plugins" "$ENV{OpenMM_ROOT}/lib/plugins"
+    HINTS "${OpenMM_ROOT}/lib/plugins"
 )
 find_library(OpenMM_CUDA_LIBRARY
     NAMES OpenMMCUDA
-    HINTS "${OpenMM_ROOT}/lib/plugins" "$ENV{OpenMM_ROOT}/lib/plugins"
+    HINTS "${OpenMM_ROOT}/lib/plugins"
 )
 mark_as_advanced(
     OpenMM_FOUND OpenMM_INCLUDE_DIR OpenMM_LIBRARY OpenMM_CPU_LIBRARY
