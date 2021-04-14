@@ -1,3 +1,5 @@
+find_python_for_openmm()
+
 find_package(Python REQUIRED COMPONENTS Interpreter Development)
 find_package(SWIG REQUIRED COMPONENTS python)
 

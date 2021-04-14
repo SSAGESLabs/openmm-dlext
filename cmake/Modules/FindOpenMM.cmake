@@ -7,37 +7,20 @@
 #  OpenMM_FOUND
 #
 
-function(find_openmm_with_python)
-    find_package(Python QUIET COMPONENTS Interpreter)
-    if(NOT Python_EXECUTABLE)
-        return()
-    endif()
-    set(FIND_OpenMM_SCRIPT "
-from __future__ import print_function;
-import os
-try:
-    from simtk.openmm.version import openmm_library_path
-    print(os.path.normpath(os.path.join(openmm_library_path, os.pardir)), end='')
-except:
-    print('', end='')"
-    )
-    execute_process(
-        COMMAND ${Python_EXECUTABLE} -c "${FIND_OpenMM_SCRIPT}"
-        OUTPUT_VARIABLE OpenMM_PATH
-    )
-    set(OpenMM_ROOT ${OpenMM_PATH} PARENT_SCOPE)
-endfunction()
+include("${PROJECT_MODULE_PATH}/OpenMMTools.cmake")
 
-if(NOT OpenMM_ROOT)
+if(NOT OpenMM_ROOT AND NOT ENV{OpenMM_ROOT})
     if(DEFINED ENV{CONDA_PREFIX})
         set(OpenMM_ROOT $ENV{CONDA_PREFIX})
+        set(OpenMM_Python_EXECUTABLE "$ENV{CONDA_PREFIX}/bin/python")
     elseif(DEFINED ENV{CONDA_EXE})
         get_filename_component(CONDA_BIN_DIR $ENV{CONDA_EXE} DIRECTORY)
         get_filename_component(OpenMM_ROOT ${CONDA_BIN_DIR} DIRECTORY)
+        set(OpenMM_Python_EXECUTABLE "${CONDA_BIN_DIR}/python")
     endif()
 endif()
 
-if(NOT OpenMM_ROOT)
+if(NOT OpenMM_ROOT AND NOT ENV{OpenMM_ROOT})
     find_openmm_with_python()
 endif()
 
