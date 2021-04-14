@@ -19,7 +19,7 @@ swig_add_library(${PySWIG_MODULE_NAME} LANGUAGE python SOURCES DLExtForce.i)
 
 target_include_directories(${PySWIG_MODULE_NAME} SYSTEM PRIVATE ${Python_INCLUDE_DIRS})
 target_compile_features(${PySWIG_MODULE_NAME} PRIVATE cxx_std_11)
-target_link_libraries(${PySWIG_MODULE_NAME} PRIVATE ${PROJECT_NAME})
+target_link_libraries(${PySWIG_MODULE_NAME} PRIVATE ${PROJECT_NAME} ${Python_LIBRARIES})
 
 # We then build a Python API for the rest of the main library with pybind11
 # The name of the module should match the one declared within the sources
