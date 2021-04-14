@@ -21,8 +21,8 @@ try:
 except:
     print('', end='')"
     )
-    execute_process(COMMAND
-        ${Python_EXECUTABLE} -c "${FIND_OpenMM_SCRIPT}"
+    execute_process(
+        COMMAND ${Python_EXECUTABLE} -c "${FIND_OpenMM_SCRIPT}"
         OUTPUT_VARIABLE OpenMM_PATH
     )
     set(OpenMM_ROOT ${OpenMM_PATH} PARENT_SCOPE)
@@ -83,7 +83,14 @@ if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
     target_link_libraries(OpenMM::OpenMM INTERFACE
         ${OpenMM_LIBRARY} ${OpenMM_CPU_LIBRARY}
     )
-    if(OpenMM_CUDA_LIBRARY)
+
+    if(${CMAKE_VERSION} VERSION_LESS 3.17)
+        find_package(CUDA QUIET)
+    else()
+        find_package(CUDAToolkit QUIET)
+    endif()
+
+    if(OpenMM_CUDA_LIBRARY AND (CUDA_FOUND OR CUDAToolkit_FOUND))
         target_compile_definitions(OpenMM::OpenMM INTERFACE OPENMM_BUILD_CUDA_LIB)
         target_include_directories(OpenMM::OpenMM INTERFACE
             "${OpenMM_INCLUDE_DIR}/openmm/cuda"
