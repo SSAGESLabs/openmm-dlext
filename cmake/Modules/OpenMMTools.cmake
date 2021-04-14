@@ -27,13 +27,17 @@ except:
 endfunction()
 
 function(find_python_for_openmm)
-    if(OpenMM_ROOT AND NOT Python_EXECUTABLE AND NOT OpenMM_Python_EXECUTABLE)
-        set(Python_EXECUTABLE "${OpenMM_ROOT}/bin/python")
+    if(OpenMM_ROOT AND NOT OpenMM_Python_EXECUTABLE)
+        if(NOT Python_EXECUTABLE)
+            set(Python_EXECUTABLE "${OpenMM_ROOT}/bin/python")
+        endif()
         find_openmm_with_python()
     endif()
-    if(OpenMM_Python_EXECUTABLE)
+    if(OpenMM_Python_EXECUTABLE AND (
+        "${OpenMM_Python_EXECUTABLE}" STREQUAL "${Python_EXECUTABLE}"
+    ))
         set(Python_EXECUTABLE ${OpenMM_Python_EXECUTABLE} PARENT_SCOPE)
-    else()
-        message(FATAL_ERROR "Couldn't find a matching python for OpenMM")
+        return()
     endif()
+    message(FATAL_ERROR "Couldn't find a matching python for OpenMM")
 endfunction()
