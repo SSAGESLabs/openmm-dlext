@@ -4,7 +4,6 @@
 %include "std_string.i"
 
 %{
-#include "Convert.h"
 #include "DLExtForce.h"
 #include "OpenMM.h"
 %}
@@ -17,25 +16,24 @@ public:
     Force();
 };
 
-class Convert {
-public:
-    %extend
-    {
-
-    static PyObject* toCapsule(Force& force)
-    {
-        return PyCapsule_New(static_cast<void*>(&force), "DLExt::Force", nullptr);
-    }
-    static PyObject* toCapsule(OpenMM::Context& context)
-    {
-        return PyCapsule_New(static_cast<void*>(&context), "OpenMM::Context", nullptr);
-    }
-    static PyObject* toCapsule(OpenMM::System& system)
-    {
-        return PyCapsule_New(static_cast<void*>(&system), "OpenMM::System", nullptr);
-    }
-
-    }
-};
-
 }
+
+%inline
+%{
+
+PyObject* _to_capsule(DLExt::Force& force)
+{
+    return PyCapsule_New(static_cast<void*>(&force), "DLExt::Force", nullptr);
+}
+
+PyObject* _to_capsule(OpenMM::Context& context)
+{
+    return PyCapsule_New(static_cast<void*>(&context), "OpenMM::Context", nullptr);
+}
+
+PyObject* _to_capsule(OpenMM::System& system)
+{
+    return PyCapsule_New(static_cast<void*>(&system), "OpenMM::System", nullptr);
+}
+
+%}

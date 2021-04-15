@@ -10,10 +10,12 @@ from .dlpack_extension import (
     velocities
 )
 
-from .dlpack_extension_swig import Force
+from .dlpack_extension_swig import (
+    Force,
+    _to_capsule
+)
 
 from .dlpack_extension import Force as _Force
-from .dlpack_extension_swig import Convert_toCapsule as _to_capsule
 
 
 class Force(Force):
