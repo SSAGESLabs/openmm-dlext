@@ -24,21 +24,9 @@ extern "C" DEFAULT_VISIBILITY void registerKernelFactories()
 {
     for (int i = 0; i < OpenMM::Platform::getNumPlatforms(); i++) {
         auto& platform = OpenMM::Platform::getPlatform(i);
-        DLExt::registerKernelFactory(platform);
+        if (DLExt::isSupported(platform))
+            platform.registerKernelFactory(ForceKernel::Name(), new KernelFactory());
     }
-}
-
-void DLExt::unsafe_registerKernelFactory(void* p)
-{
-    auto platform = static_cast<OpenMM::Platform*>(p);
-    if (platform)
-        DLExt::registerKernelFactory(*platform);
-}
-
-void DLExt::registerKernelFactory(OpenMM::Platform& platform)
-{
-    if (DLExt::isSupported(platform))
-        platform.registerKernelFactory(ForceKernel::Name(), new KernelFactory());
 }
 
 bool DLExt::isSupported(OpenMM::Platform& platform)

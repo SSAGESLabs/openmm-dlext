@@ -6,6 +6,7 @@ from .dlpack_extension import (
     forces,
     inverse_masses,
     positions,
+    register_plugin,
     velocities
 )
 
@@ -30,11 +31,15 @@ class Force(Force):
         return self.__alt__.view(_to_capsule(context))
 
 
+register_plugin()
+
+
 dlpack_extension = None
 dlpack_extension_swig = None
 _dlpack_extension = None
 _dlpack_extension_swig = None
 
+del register_plugin
 del dlpack_extension
 del dlpack_extension_swig
 del _dlpack_extension

@@ -2,6 +2,8 @@
 // This file is part of `openmm-dlext`, see LICENSE.md
 
 #include "DLExtForce.h"
+#include "DLExtKernelFactory.h"
+#include "DLExtKernels.h"
 #include "PyDLExt.h"
 
 
@@ -11,6 +13,15 @@ namespace py = pybind11;
 
 namespace
 {
+
+void registerKernelFactories()
+{
+    for (int i = 0; i < OpenMM::Platform::getNumPlatforms(); i++) {
+        auto& platform = OpenMM::Platform::getPlatform(i);
+        if (DLExt::isSupported(platform))
+            platform.registerKernelFactory(ForceKernel::Name(), new KernelFactory());
+    }
+}
 
 Force* toForcePtr(py::capsule& capsule)
 {
@@ -94,9 +105,10 @@ PYBIND11_MODULE(dlpack_extension, m)
     export_Force(m);
 
     // Methods
+    m.def("register_plugin", &registerKernelFactories);
+    m.def("atom_ids", encapsulate<&atomIds>);
+    m.def("forces", encapsulate<&forces>);
+    m.def("inverse_masses", encapsulate<&inverseMasses>);
     m.def("positions", encapsulate<&positions>);
     m.def("velocities", encapsulate<&velocities>);
-    m.def("forces", encapsulate<&forces>);
-    m.def("atom_ids", encapsulate<&atomIds>);
-    m.def("inverse_masses", encapsulate<&inverseMasses>);
 }

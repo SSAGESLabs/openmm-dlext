@@ -22,8 +22,6 @@ public:
     ) const;
 };
 
-void unsafe_registerKernelFactory(void* platform);
-void registerKernelFactory(OpenMM::Platform& platform);
 bool isSupported(OpenMM::Platform& platform);
 
 
