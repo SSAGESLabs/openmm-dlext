@@ -52,11 +52,6 @@ void _DLDataBridgeDeleter(DLManagedTensor* tensor)
 // Uniform interface for property extraction
 // `opaque` returns a `void*` with the memory address of an array or stored property
 
-inline void* opaque(const void* array)
-{
-    return (void*)(array);
-}
-
 template <typename T>
 inline void* opaque(const std::vector<T>* array)
 {
@@ -65,17 +60,17 @@ inline void* opaque(const std::vector<T>* array)
 
 inline void* opaque(ReferencePlatformData& pdata, PositionsGetter)
 {
-    return opaque(pdata.positions);
+    return opaque(reinterpret_cast<ReferenceArray*>(pdata.positions));
 }
 
 inline void* opaque(ReferencePlatformData& pdata, VelocitiesGetter)
 {
-    return opaque(pdata.velocities);
+    return opaque(reinterpret_cast<ReferenceArray*>(pdata.velocities));
 }
 
 inline void* opaque(ReferencePlatformData& pdata, ForcesGetter)
 {
-    return opaque(pdata.forces);
+    return opaque(reinterpret_cast<ReferenceArray*>(pdata.forces));
 }
 
 #ifdef OPENMM_BUILD_CUDA_LIB
