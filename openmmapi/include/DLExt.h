@@ -213,6 +213,11 @@ inline int64_t size(const ContextView& view, ForcesGetter, SecondDim)
 
 constexpr int64_t size(const ContextView& view, AtomIdsGetter, SecondDim) { return 1; }
 
+inline int64_t size(const ContextView& view, InverseMassesGetter, SecondDim)
+{
+    return view.deviceType() == kDLGPU ? 4 : 1;
+}
+
 template <typename PropertyGetter>
 constexpr uint64_t offset(const ContextView& view, PropertyGetter)
 {
