@@ -16,9 +16,11 @@ namespace
 
 void registerKernelFactories()
 {
+    std::vector<std::string> names = { ForceKernel::Name() };
+
     for (int i = 0; i < OpenMM::Platform::getNumPlatforms(); i++) {
         auto& platform = OpenMM::Platform::getPlatform(i);
-        if (DLExt::isSupported(platform))
+        if (DLExt::isSupported(platform) && !platform.supportsKernels(names))
             platform.registerKernelFactory(ForceKernel::Name(), new KernelFactory());
     }
 }
