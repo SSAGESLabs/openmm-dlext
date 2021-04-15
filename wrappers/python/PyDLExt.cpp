@@ -61,6 +61,7 @@ void export_ContextView(py::module& m)
         .def("device_type", &ContextView::deviceType)
         .def("particle_number", &ContextView::particleNumber)
         .def("ids_ordering", &ContextView::idsOrdering)
+        .def("synchronize", &ContextView::synchronize)
     ;
 }
 

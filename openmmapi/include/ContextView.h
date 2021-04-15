@@ -34,24 +34,25 @@ enum class IdsOrdering { Ordered, Forward, Reverse };
 class DEFAULT_VISIBILITY ContextView {
 public:
     ContextView(OpenMM::ContextImpl& context);
-    DLDeviceType deviceType() const;
     template <typename T> T& platformData() const;
     int64_t particleNumber() const;
     const std::vector<double>& inverseMasses() const;
     const std::vector<int>& atomIds() const;
-    IdsOrdering idsOrdering() const;
+    DLDeviceType deviceType() const;
     uint8_t posPrecBits() const;
     uint8_t velPrecBits() const;
     uint8_t forcesTypeCode() const;
+    IdsOrdering idsOrdering() const;
+    void synchronize();
 private:
     OpenMM::ContextImpl* ctx;
     void* pdata;
+    std::vector<double> inv_masses;
+    std::vector<int> atom_ids;
     DLDeviceType dtype;
     uint8_t pos_bits = 64;
     uint8_t vel_bits = 64;
     uint8_t forces_type = kDLFloat;
-    std::vector<double> inv_masses;
-    std::vector<int> atom_ids;
     IdsOrdering ids_ordering = IdsOrdering::Ordered;
 };
 
