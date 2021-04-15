@@ -52,8 +52,7 @@ void _DLDataBridgeDeleter(DLManagedTensor* tensor)
 // Uniform interface for property extraction
 // `opaque` returns a `void*` with the memory address of an array or stored property
 
-template <typename T>
-inline void* opaque(const T* array)
+inline void* opaque(const void* array)
 {
     return (void*)(array);
 }
@@ -131,7 +130,7 @@ inline void* opaque(const ContextView& view, AtomIdsGetter)
     if (view.deviceType() == kDLGPU)
         return opaque<CudaPlatformData>(view, kAtomIds);
 #endif
-    return opaque(view.atomIds().data());
+    return opaque(&view.atomIds());
 }
 
 inline void* opaque(const ContextView& view, InverseMassesGetter)
@@ -141,7 +140,7 @@ inline void* opaque(const ContextView& view, InverseMassesGetter)
     if (view.deviceType() == kDLGPU)
         return opaque<CudaPlatformData>(view, kVelocities);
 #endif
-    return opaque(view.inverseMasses().data());
+    return opaque(&view.inverseMasses());
 }
 
 inline DLContext deviceInfo(const ContextView& view)
