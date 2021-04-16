@@ -16,17 +16,13 @@ endif()
 if(NOT OpenMM_ROOT)
     if(DEFINED ENV{CONDA_PREFIX})
         set(OpenMM_ROOT $ENV{CONDA_PREFIX})
-        set(OpenMM_Python_EXECUTABLE "$ENV{CONDA_PREFIX}/bin/python")
     elseif(DEFINED ENV{CONDA_EXE})
         get_filename_component(CONDA_BIN_DIR $ENV{CONDA_EXE} DIRECTORY)
         get_filename_component(OpenMM_ROOT ${CONDA_BIN_DIR} DIRECTORY)
-        set(OpenMM_Python_EXECUTABLE "${CONDA_BIN_DIR}/python")
     endif()
 endif()
 
-if(NOT OpenMM_ROOT)
-    find_openmm_with_python()
-endif()
+find_openmm_with_python()
 
 find_path(OpenMM_INCLUDE_DIR
     NAMES OpenMM.h

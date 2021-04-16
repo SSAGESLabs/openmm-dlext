@@ -33,9 +33,7 @@ function(check_python_and_openmm)
         endif()
         find_openmm_with_python()
     endif()
-    if(OpenMM_Python_EXECUTABLE AND (
-        "${OpenMM_Python_EXECUTABLE}" STREQUAL "${Python_EXECUTABLE}"
-    ))
+    if(OpenMM_Python_EXECUTABLE)
         set(Python_EXECUTABLE ${OpenMM_Python_EXECUTABLE} PARENT_SCOPE)
         return()
     endif()
