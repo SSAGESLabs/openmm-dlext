@@ -39,3 +39,16 @@ function(check_python_and_openmm)
     endif()
     message(FATAL_ERROR "Couldn't find a matching python installation for OpenMM")
 endfunction()
+
+function(set_python_module_path)
+    set(FIND_OpenMM_SCRIPT "
+from __future__ import print_function;
+import os, simtk
+print(os.path.normpath(os.path.join(simtk.__file__, os.pardir, os.pardir)), end='')"
+    )
+    execute_process(
+        COMMAND ${Python_EXECUTABLE} -c "${FIND_OpenMM_SCRIPT}"
+        OUTPUT_VARIABLE OpenMM_Python_PATH
+    )
+    set(OpenMMDLExt_Python_PATH "${OpenMM_Python_PATH}/openmm_dlext" PARENT_SCOPE)
+endfunction()
