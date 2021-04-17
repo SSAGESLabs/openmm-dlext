@@ -23,7 +23,8 @@ class Force(Force):
         super(Force, self).__init__()
         self.__alt__ = _Force(_to_capsule(self))
 
-    def add_to(self, context, system):
+    def add_to(self, context):
+        system = context.getSystem()
         self.__alt__.add_to(_to_capsule(context), _to_capsule(system))
 
     def set_callback_in(self, context, callback):
