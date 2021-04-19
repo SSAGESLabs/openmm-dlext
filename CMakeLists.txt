@@ -9,6 +9,7 @@ project(OpenMMDLExt LANGUAGES CXX)
 
 set(PROJECT_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_MODULE_PATH})
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 find_package(OpenMM REQUIRED)
 
@@ -24,8 +25,6 @@ add_subdirectory(platforms)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenMM::OpenMM dlpack::dlpack)
-
-set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # Build wrappers
 add_subdirectory(wrappers)

@@ -27,8 +27,6 @@ target_include_directories(${PySWIG_MODULE_NAME} SYSTEM PRIVATE ${Python_INCLUDE
 target_compile_features(${PySWIG_MODULE_NAME} PRIVATE cxx_std_11)
 target_link_libraries(${PySWIG_MODULE_NAME} PRIVATE ${PROJECT_NAME} ${Python_LIBRARIES})
 
-set_target_properties(${PySWIG_MODULE_NAME} PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
-
 install(TARGETS ${PySWIG_MODULE_NAME}
     DESTINATION ${OpenMMDLExt_Python_PATH}
 )
@@ -46,8 +44,6 @@ pybind11_add_module(${pybind11_MODULE_NAME} MODULE "")
 target_sources(${pybind11_MODULE_NAME} PRIVATE PyDLExt.cpp)
 target_compile_features(${pybind11_MODULE_NAME} PRIVATE cxx_std_11)
 target_link_libraries(${pybind11_MODULE_NAME} PRIVATE ${PROJECT_NAME})
-
-set_target_properties(${pybind11_MODULE_NAME} PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 install(TARGETS ${pybind11_MODULE_NAME}
     DESTINATION ${OpenMMDLExt_Python_PATH}
