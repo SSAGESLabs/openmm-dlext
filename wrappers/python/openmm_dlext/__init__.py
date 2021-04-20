@@ -24,8 +24,6 @@ class Force(Force):
         self.__alt__ = _Force(_to_capsule(self))
 
     def add_to(self, context):
-        if self.thisown == 0:
-            raise RuntimeError("Force already assigned to a System or Context")
         system = context.getSystem()
         self.__alt__.add_to(_to_capsule(context), _to_capsule(system))
         self.thisown = 0
