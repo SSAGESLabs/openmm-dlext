@@ -68,20 +68,20 @@ if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
     )
 
     if(OpenMM_CUDA_LIBRARY)
-       if(${CMAKE_VERSION} VERSION_LESS 3.17)
+        if(${CMAKE_VERSION} VERSION_LESS 3.17)
             find_package(CUDA)
         else()
             find_package(CUDAToolkit)
         endif()
 
-	if(CUDA_FOUND OR CUDAToolkit_FOUND)
+        if(CUDA_FOUND OR CUDAToolkit_FOUND)
             target_compile_definitions(OpenMM::OpenMM INTERFACE OPENMM_BUILD_CUDA_LIB)
             target_include_directories(OpenMM::OpenMM INTERFACE
-              "${OpenMM_INCLUDE_DIR}/openmm/cuda"
-              )
+                "${OpenMM_INCLUDE_DIR}/openmm/cuda"
+            )
             target_link_libraries(OpenMM::OpenMM INTERFACE
-              ${OpenMM_CUDA_LIBRARY}
-              )
-	  endif()
+                ${OpenMM_CUDA_LIBRARY}
+            )
+        endif()
     endif(OpenMM_CUDA_LIBRARY)
 endif()
