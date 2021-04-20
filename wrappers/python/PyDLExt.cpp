@@ -67,7 +67,9 @@ void export_ContextView(py::module& m)
 
 void export_Force(py::module& m)
 {
-    py::class_<Force>(m, "Force")
+    // We only create instances of Force by wrapping existing instances created
+    // by the SWIG bindings, which will be responsible for deallocating these
+    py::class_<Force, std::unique_ptr<Force, py::nodelete>>(m, "Force")
         .def(py::init( [](py::capsule& force) { return toForcePtr(force); } ),
             py::return_value_policy::reference
         )
