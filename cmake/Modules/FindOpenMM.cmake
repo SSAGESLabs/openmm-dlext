@@ -69,9 +69,9 @@ if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
 
     if(OpenMM_CUDA_LIBRARY)
        if(${CMAKE_VERSION} VERSION_LESS 3.17)
-            find_package(CUDA)
+            find_package(CUDA REQUIRED)
         else()
-            find_package(CUDAToolkit)
+            find_package(CUDAToolkit REQUIRED)
         endif()
 
 	if(CUDA_FOUND OR CUDAToolkit_FOUND)
