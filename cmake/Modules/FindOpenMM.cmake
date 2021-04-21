@@ -19,6 +19,8 @@ if(NOT OpenMM_ROOT)
     elseif(DEFINED ENV{CONDA_EXE})
         get_filename_component(CONDA_BIN_DIR $ENV{CONDA_EXE} DIRECTORY)
         get_filename_component(OpenMM_ROOT ${CONDA_BIN_DIR} DIRECTORY)
+    elseif(DEFINED ENV{VIRTUAL_ENV})
+        set(OpenMM_ROOT $ENV{VIRTUAL_ENV})
     endif()
 endif()
 
@@ -70,12 +72,16 @@ if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
     if(OpenMM_CUDA_LIBRARY)
         if(${CMAKE_VERSION} VERSION_LESS 3.17)
             find_package(CUDA)
+            set(CUDAToolkit_INCLUDE_DIRS ${CUDA_INCLUDE_DIRS})
         else()
             find_package(CUDAToolkit)
         endif()
 
         if(CUDA_FOUND OR CUDAToolkit_FOUND)
             target_compile_definitions(OpenMM::OpenMM INTERFACE OPENMM_BUILD_CUDA_LIB)
+            target_include_directories(OpenMM::OpenMM SYSTEM INTERFACE
+                "${CUDAToolkit_INCLUDE_DIRS}"
+            )
             target_include_directories(OpenMM::OpenMM INTERFACE
                 "${OpenMM_INCLUDE_DIR}/openmm/cuda"
             )

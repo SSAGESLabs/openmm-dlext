@@ -21,11 +21,11 @@ install(DIRECTORY openmm_dlext/
 set(PySWIG_MODULE_NAME "dlpack_extension_swig")
 
 set_property(SOURCE DLExtForce.i PROPERTY CPLUSPLUS ON)
-swig_add_library(${PySWIG_MODULE_NAME} LANGUAGE python SOURCES DLExtForce.i)
+swig_add_library(${PySWIG_MODULE_NAME} TYPE SHARED LANGUAGE python SOURCES DLExtForce.i)
 
-target_include_directories(${PySWIG_MODULE_NAME} SYSTEM PRIVATE ${Python_INCLUDE_DIRS})
+target_include_directories(${PySWIG_MODULE_NAME} SYSTEM PUBLIC ${Python_INCLUDE_DIRS})
 target_compile_features(${PySWIG_MODULE_NAME} PRIVATE cxx_std_11)
-target_link_libraries(${PySWIG_MODULE_NAME} PRIVATE ${PROJECT_NAME} ${Python_LIBRARIES})
+target_link_libraries(${PySWIG_MODULE_NAME} PUBLIC ${PROJECT_NAME} ${Python_LIBRARIES})
 
 install(TARGETS ${PySWIG_MODULE_NAME}
     DESTINATION ${OpenMMDLExt_Python_PATH}
@@ -39,11 +39,11 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PySWIG_MODULE_NAME}.py"
 # The name of the module should match the one declared within the sources
 set(pybind11_MODULE_NAME "dlpack_extension")
 
-pybind11_add_module(${pybind11_MODULE_NAME} MODULE "")
+pybind11_add_module(${pybind11_MODULE_NAME} SHARED "")
 
 target_sources(${pybind11_MODULE_NAME} PRIVATE PyDLExt.cpp)
 target_compile_features(${pybind11_MODULE_NAME} PRIVATE cxx_std_11)
-target_link_libraries(${pybind11_MODULE_NAME} PRIVATE ${PROJECT_NAME})
+target_link_libraries(${pybind11_MODULE_NAME} PUBLIC ${PROJECT_NAME})
 
 install(TARGETS ${pybind11_MODULE_NAME}
     DESTINATION ${OpenMMDLExt_Python_PATH}
