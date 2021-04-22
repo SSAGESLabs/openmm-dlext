@@ -1,5 +1,5 @@
 function(fetch_pybind11 ver)
-    CPMFindPackage(NAME pybind11
+    CPMAddPackage(NAME pybind11
         VERSION         ${ver}
         GIT_REPOSITORY  https://github.com/pybind/pybind11.git
         GIT_TAG         v${ver}
@@ -14,8 +14,4 @@ if(NOT pybind11_VERSION)
 endif()
 
 fetch_pybind11(${pybind11_VERSION})
-find_package(pybind11 CONFIG)
-
-if(NOT pybind11_DIR)
-    add_subdirectory(${pybind11_SOURCE_DIR} "${PROJECT_BINARY_DIR}/extern/pybind11")
-endif()
+add_subdirectory(${pybind11_SOURCE_DIR} "${PROJECT_BINARY_DIR}/extern/pybind11")
