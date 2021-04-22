@@ -26,18 +26,15 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenMM::OpenMM dlpack::dlpack)
 
-# Build wrappers
-add_subdirectory(wrappers)
-
 # Install
 include(GNUInstallDirs)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    get_filename_component(OpenMM_INSTALL_PREFIX ${OpenMM_INCLUDE_DIR} DIRECTORY)
     set(CMAKE_INSTALL_PREFIX ${OpenMM_INSTALL_PREFIX} CACHE PATH "" FORCE)
 endif()
 
 install(TARGETS ${PROJECT_NAME}
+    DESTINATION ${OpenMM_INSTALL_LIBDIR}
     #EXPORT "${PROJECT_NAME}Targets"
 )
 #install(EXPORT "${PROJECT_NAME}Targets"
@@ -49,3 +46,6 @@ install(DIRECTORY include/
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/openmm-dlext"
     FILES_MATCHING PATTERN "*.h"
 )
+
+# Build wrappers
+add_subdirectory(wrappers)

@@ -52,6 +52,10 @@ find_package_handle_standard_args(OpenMM
     REQUIRED_VARS OpenMM_INCLUDE_DIR OpenMM_LIBRARY OpenMM_CPU_LIBRARY
 )
 
+set(OpenMM_INSTALL_INCLUDEDIR ${OpenMM_INCLUDE_DIR})
+get_filename_component(OpenMM_INSTALL_LIBDIR ${OpenMM_LIBRARY} DIRECTORY)
+get_filename_component(OpenMM_INSTALL_PREFIX ${OpenMM_INCLUDE_DIR} DIRECTORY)
+
 if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
     add_library(OpenMM::OpenMM UNKNOWN IMPORTED)
     set_target_properties(OpenMM::OpenMM PROPERTIES
