@@ -9,9 +9,9 @@ function(fetch_pybind11 ver)
     set(pybind11_SOURCE_DIR ${pybind11_SOURCE_DIR} PARENT_SCOPE)
 endfunction()
 
-if(NOT pybind11_SOURCE_DIR)
-    set(pybind11_FALLBACK_VERSION 2.6.2)
-    fetch_pybind11(${pybind11_FALLBACK_VERSION})
+if(NOT pybind11_VERSION)
+    set(pybind11_VERSION 2.6.2)
 endif()
 
-add_subdirectory(${pybind11_SOURCE_DIR} "${PROJECT_BINARY_DIR}/extern/pybind11")
+fetch_pybind11(${pybind11_VERSION})
+find_package(pybind11 CONFIG)
