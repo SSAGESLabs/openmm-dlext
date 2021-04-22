@@ -15,3 +15,7 @@ endif()
 
 fetch_pybind11(${pybind11_VERSION})
 find_package(pybind11 CONFIG)
+
+if(NOT pybind11_DIR)
+    add_subdirectory(${pybind11_SOURCE_DIR} "${PROJECT_BINARY_DIR}/extern/pybind11")
+endif()
