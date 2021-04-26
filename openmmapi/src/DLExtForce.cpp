@@ -16,6 +16,15 @@ bool Force::usesPeriodicBoundaryConditions() const
     return uses_periodic_bc;
 }
 
+bool Force::isPresentIn(const OpenMM::System& system)
+{
+    auto force_found = false;
+    for (int i = 0; i < system.getNumForces(); ++i)
+        if ((force_found = (&system.getForce(i) == this)))
+            break;
+    return force_found;
+}
+
 void Force::addTo(OpenMM::Context& context, OpenMM::System& system)
 {
     if (&context.getSystem() != &system)
@@ -28,11 +37,7 @@ void Force::addTo(OpenMM::Context& context, OpenMM::System& system)
         throw OpenMM::OpenMMException("Unsupported platform");
 
     // Check if this Force instance is already present in the system
-    auto force_found = false;
-    for (int i = 0; i < system.getNumForces(); ++i)
-        if ((force_found = (&system.getForce(i) == this)))
-            break;
-    if (!force_found)
+    if (!isPresentIn(system))
         system.addForce(this);
 
     // Check if this Force instance has already created a ForceImpl within the ContextImpl

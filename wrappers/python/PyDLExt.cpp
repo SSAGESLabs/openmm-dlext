@@ -73,6 +73,11 @@ void export_Force(py::module& m)
         .def(py::init( [](py::capsule& force) { return toForcePtr(force); } ),
             py::return_value_policy::reference
         )
+        .def("is_present_in",
+            [](Force& self, py::capsule& system) {
+                return self.isPresentIn(toSystem(system));
+            }
+        )
         .def("add_to",
             [](Force& self, py::capsule& context, py::capsule& system) {
                 self.addTo(toContext(context), toSystem(system));

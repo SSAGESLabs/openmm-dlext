@@ -23,10 +23,15 @@ class Force(Force):
         super(Force, self).__init__()
         self.__alt__ = _Force(_to_capsule(self))
 
+    def is_present_in(self, system):
+        return self.__alt__.is_present_in(_to_capsule(system))
+
     def add_to(self, context):
         system = context.getSystem()
+        if not self.thisown and not self.is_present_in(system):
+            raise RuntimeError("Force already added to another system")
         self.__alt__.add_to(_to_capsule(context), _to_capsule(system))
-        self.thisown = 0
+        self.thisown = False
 
     def set_callback_in(self, context, callback):
         self.__alt__.set_callback_in(_to_capsule(context), callback)

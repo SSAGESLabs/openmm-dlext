@@ -29,6 +29,7 @@ class DEFAULT_VISIBILITY Force : public OpenMM::Force {
 public:
     Force() { }
     bool usesPeriodicBoundaryConditions() const;
+    bool isPresentIn(const OpenMM::System& system);
     void addTo(OpenMM::Context& context, OpenMM::System& system);
     void setCallbackIn(OpenMM::Context& context, Function<void>& callback);
     ContextView view(OpenMM::Context& context);
