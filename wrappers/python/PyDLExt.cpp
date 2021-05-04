@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 // This file is part of `openmm-dlext`, see LICENSE.md
 
+#include "pybind11/functional.h"
+
 #include "DLExtForce.h"
 #include "DLExtKernelFactory.h"
 #include "DLExtKernels.h"
