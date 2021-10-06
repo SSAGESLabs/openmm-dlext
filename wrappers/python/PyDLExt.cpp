@@ -86,7 +86,7 @@ void export_Force(py::module& m)
             }
         )
         .def("set_callback_in",
-            [](Force& self, py::capsule& context, Function<void>& callback) {
+            [](Force& self, py::capsule& context, Function<void, long long>& callback) {
                 self.setCallbackIn(toContext(context), callback);
             }
         )

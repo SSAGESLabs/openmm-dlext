@@ -31,7 +31,7 @@ public:
     bool usesPeriodicBoundaryConditions() const;
     bool isPresentIn(const OpenMM::System& system);
     void addTo(OpenMM::Context& context, OpenMM::System& system);
-    void setCallbackIn(OpenMM::Context& context, Function<void>& callback);
+    void setCallbackIn(OpenMM::Context& context, Function<void, long long>& callback);
     ContextView view(OpenMM::Context& context);
 protected:
     OpenMM::ForceImpl* createImpl() const;
