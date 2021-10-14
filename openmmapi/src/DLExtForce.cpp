@@ -53,7 +53,7 @@ void Force::addTo(OpenMM::Context& context, OpenMM::System& system)
     }
 }
 
-void Force::setCallbackIn(OpenMM::Context& context, Function<void>& callback)
+void Force::setCallbackIn(OpenMM::Context& context, Function<void, long long>& callback)
 {
     auto& impl = reinterpret_cast<ForceImpl&>(getImplInContext(context));
     impl.setCallback(callback);
