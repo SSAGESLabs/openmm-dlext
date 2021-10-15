@@ -1,6 +1,15 @@
 %module dlpack_extension_swig
 
-%import(module = "simtk.openmm") "OpenMMForce.i"
+%pythoncode
+%{
+from importlib import import_module
+try:
+    openmm = import_module("openmm")
+except:
+    openmm = import_module("simtk.openmm")
+%}
+
+%import(module = "openmm") "OpenMMForce.i"
 %include "std_string.i"
 
 %{
