@@ -53,13 +53,10 @@ function(set_python_module_path)
 from __future__ import print_function;
 from importlib import import_module
 import os
-openmm = None
-for m in ('openmm', 'simtk'):
-    try:
-        openmm = import_module(m)
-        break
-    except:
-        continue
+try:
+    openmm = import_module('openmm')
+except:
+    openmm = import_module('simtk')
 print(os.path.normpath(os.path.join(openmm.__file__, os.pardir, os.pardir)), end='')"
     )
     execute_process(
