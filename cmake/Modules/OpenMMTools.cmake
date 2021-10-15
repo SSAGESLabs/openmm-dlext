@@ -10,7 +10,7 @@ from __future__ import print_function;
 from importlib import import_module
 import os
 openmm = None
-for m in ("openmm", "simtk.openmm"):
+for m in ('openmm', 'simtk.openmm'):
     try:
         openmm = import_module(m)
         break
@@ -54,7 +54,7 @@ from __future__ import print_function;
 from importlib import import_module
 import os
 openmm = None
-for m in ("openmm", "simtk"):
+for m in ('openmm', 'simtk'):
     try:
         openmm = import_module(m)
         break
