@@ -7,11 +7,19 @@ function(find_openmm_with_python)
     endif()
     set(FIND_OpenMM_SCRIPT "
 from __future__ import print_function;
+from importlib import import_module
 import os
-try:
-    from simtk.openmm.version import openmm_library_path
-    print(os.path.normpath(os.path.join(openmm_library_path, os.pardir)), end='')
-except:
+openmm = None
+for m in ('openmm', 'simtk.openmm'):
+    try:
+        openmm = import_module(m)
+        break
+    except:
+        continue
+if openmm is not None:
+    libpath = openmm.version.openmm_library_path
+    print(os.path.normpath(os.path.join(libpath, os.pardir)), end='')
+else:
     print('', end='')"
     )
     execute_process(
@@ -43,8 +51,13 @@ endfunction()
 function(set_python_module_path)
     set(FIND_OpenMM_SCRIPT "
 from __future__ import print_function;
-import os, simtk
-print(os.path.normpath(os.path.join(simtk.__file__, os.pardir, os.pardir)), end='')"
+from importlib import import_module
+import os
+try:
+    openmm = import_module('openmm')
+except:
+    openmm = import_module('simtk')
+print(os.path.normpath(os.path.join(openmm.__file__, os.pardir, os.pardir)), end='')"
     )
     execute_process(
         COMMAND ${Python_EXECUTABLE} -c "${FIND_OpenMM_SCRIPT}"
