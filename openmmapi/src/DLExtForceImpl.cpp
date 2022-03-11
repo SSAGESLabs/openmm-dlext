@@ -24,7 +24,8 @@ void ForceImpl::updateContextState(OpenMM::ContextImpl& context, bool& forcesInv
 double ForceImpl::calcForcesAndEnergy(
     OpenMM::ContextImpl& context, bool includeForces, bool includeEnergy, int groups
 ) {
-    callback(getStepCount(context));
+    if (includeForces)
+        callback(getStepCount(context));
     return 0.0;
 }
 
