@@ -1,4 +1,4 @@
-MIT License
+# MIT License
 
 Copyright (c) 2021 Pablo Zubieta and contributors
 

@@ -4,28 +4,22 @@
 #ifndef OPENMM_DLEXT_KERNEL_FACTORY_H_
 #define OPENMM_DLEXT_KERNEL_FACTORY_H_
 
-
 #include "openmm/KernelFactory.h"
 
-
-namespace DLExt
-{
-
+namespace DLExt {
 
 //
 //  This class creates kernels for the DLExt plugin.
 //
 class KernelFactory : public OpenMM::KernelFactory {
 public:
-    OpenMM::KernelImpl* createKernelImpl(
-        std::string name, const OpenMM::Platform& platform, OpenMM::ContextImpl& context
-    ) const;
+  OpenMM::KernelImpl *createKernelImpl(std::string name,
+                                       const OpenMM::Platform &platform,
+                                       OpenMM::ContextImpl &context) const;
 };
 
-bool isSupported(OpenMM::Platform& platform);
+bool isSupported(OpenMM::Platform &platform);
 
+} // namespace DLExt
 
-}  // namespace DLExt
-
-
-#endif  // OPENMM_DLEXT_KERNEL_FACTORY_H_
+#endif // OPENMM_DLEXT_KERNEL_FACTORY_H_

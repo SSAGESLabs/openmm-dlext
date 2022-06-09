@@ -1,5 +1,4 @@
-OpenMM-dlext
-------------
+# OpenMM-dlext
 
 The plugin is intended to provide a `OpenMM::Force` derived class that does no direct
 computation, but instead uses [DLPack](https://github.com/dmlc/dlpack) wrappers around CPU
