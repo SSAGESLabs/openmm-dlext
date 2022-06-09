@@ -1,0 +1,14 @@
+version: 0.1
+cli:
+  version: 0.13.0-beta
+lint:
+  enabled:
+    - actionlint@1.6.13
+    - black@22.3.0
+    - flake8@4.0.1
+    - gitleaks@8.8.7
+    - hadolint@2.10.0
+    - isort@5.10.1
+    - markdownlint@0.31.1
+    - prettier@2.6.2
+    - clang-format@14.0.0
