@@ -15,6 +15,8 @@
 #include "openmm/cuda/CudaContext.h"
 #endif
 
+using namespace cxx11utils;
+
 namespace DLExt
 {
 
