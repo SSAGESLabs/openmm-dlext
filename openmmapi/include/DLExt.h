@@ -15,7 +15,6 @@
 #include "openmm/cuda/CudaContext.h"
 #endif
 
-using namespace cxx11utils;
 
 namespace DLExt
 {
@@ -219,7 +218,7 @@ constexpr uint64_t offset(const ContextView& view, PropertyGetter)
 template <typename PropertyGetter>
 DLManagedTensor* wrap(const ContextView& view, PropertyGetter property)
 {
-    auto bridge = make_unique<DLDataBridge>();
+    auto bridge = cxx11utils::make_unique<DLDataBridge>();
 
     bridge->tensor.manager_ctx = bridge.get();
     bridge->tensor.deleter = _DLDataBridgeDeleter;
