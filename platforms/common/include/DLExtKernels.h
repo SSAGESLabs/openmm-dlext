@@ -6,14 +6,16 @@
 
 #include "openmm/KernelImpl.h"
 
-namespace DLExt {
+namespace DLExt
+{
 
 class ForceKernel : public OpenMM::KernelImpl {
 public:
-  static std::string Name() { return "DLExtForceKernel"; }
+    static std::string Name() { return "DLExtForceKernel"; }
 
-  ForceKernel(std::string name, const OpenMM::Platform &platform)
-      : OpenMM::KernelImpl(name, platform) {}
+    ForceKernel(std::string name, const OpenMM::Platform& platform) :
+        OpenMM::KernelImpl(name, platform)
+    {}
 };
 
 } // namespace DLExt

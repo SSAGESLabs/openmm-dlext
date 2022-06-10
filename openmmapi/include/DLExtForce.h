@@ -4,14 +4,13 @@
 #ifndef OPENMM_DLEXT_FORCE_H_
 #define OPENMM_DLEXT_FORCE_H_
 
-#include "cxx11utils.h"
-
 #include "ContextView.h"
-
+#include "cxx11utils.h"
 #include "openmm/Force.h"
 #include "openmm/System.h"
 
-namespace DLExt {
+namespace DLExt
+{
 
 using namespace cxx11utils;
 
@@ -23,19 +22,18 @@ using namespace cxx11utils;
 //
 class DEFAULT_VISIBILITY Force : public OpenMM::Force {
 public:
-  Force() {}
-  bool usesPeriodicBoundaryConditions() const;
-  bool isPresentIn(const OpenMM::System &system);
-  void addTo(OpenMM::Context &context, OpenMM::System &system);
-  void setCallbackIn(OpenMM::Context &context,
-                     Function<void, long long> &callback);
-  ContextView view(OpenMM::Context &context);
+    Force() {}
+    bool usesPeriodicBoundaryConditions() const;
+    bool isPresentIn(const OpenMM::System& system);
+    void addTo(OpenMM::Context& context, OpenMM::System& system);
+    void setCallbackIn(OpenMM::Context& context, Function<void, long long>& callback);
+    ContextView view(OpenMM::Context& context);
 
 protected:
-  OpenMM::ForceImpl *createImpl() const;
+    OpenMM::ForceImpl* createImpl() const;
 
 private:
-  bool uses_periodic_bc = true;
+    bool uses_periodic_bc = true;
 };
 
 } // namespace DLExt
