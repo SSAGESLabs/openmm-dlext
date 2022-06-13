@@ -24,9 +24,11 @@ using ReferencePlatformData = OpenMM::ReferencePlatform::PlatformData;
 using CudaPlatformData = OpenMM::CudaPlatform::PlatformData;
 #endif
 
-enum class IdsOrdering { Ordered,
-                         Forward,
-                         Reverse };
+enum class IdsOrdering {
+    Ordered,
+    Forward,
+    Reverse
+};
 
 class DEFAULT_VISIBILITY ContextView {
 public:
