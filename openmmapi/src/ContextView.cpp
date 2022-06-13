@@ -7,13 +7,12 @@
 #include "openmm/cpu/CpuPlatform.h"
 
 #ifdef OPENMM_BUILD_CUDA_LIB
-#include <cuda_runtime_api.h>
 #include "openmm/cuda/CudaContext.h"
+
+#include <cuda_runtime_api.h>
 #endif
 
-
 using namespace DLExt;
-
 
 DLDeviceType DLExt::dlDeviceType(OpenMM::Platform& platform)
 {

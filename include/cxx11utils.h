@@ -4,7 +4,6 @@
 #ifndef CXX11_UTILS_H_
 #define CXX11_UTILS_H_
 
-
 #if !defined(DEFAULT_VISIBILITY)
 #if defined(WIN32) || defined(_WIN32)
 #define DEFAULT_VISIBILITY __declspec(dllexport)
@@ -13,16 +12,13 @@
 #endif
 #endif
 
-
 #include <functional>
 #include <memory>
 #include <type_traits>
 #include <unordered_set>
 
-
 namespace cxx11utils
 {
-
 
 //
 //  Aliases
@@ -36,10 +32,10 @@ using UPtr = std::unique_ptr<T>;
 template <typename T>
 using Set = std::unordered_set<T>;
 
-template <typename T, typename ...Args>
+template <typename T, typename... Args>
 using Function = std::function<T(Args...)>;
 
-template <typename T, typename Object, typename ...Args>
+template <typename T, typename Object, typename... Args>
 using MemberFunction = T (Object::*)(Args...);
 
 template <typename T, typename Object>
@@ -49,17 +45,18 @@ using Member = T Object::*;
 //  Functions
 //
 template <typename T>
-inline void maybe_unused(T&&) { }
+inline void maybe_unused(T&&)
+{ }
 
 // `make_unique` for C++11
-template <typename T, typename ...Args>
-UPtr<T> make_unique(Args&& ...args)
+template <typename T, typename... Args>
+UPtr<T> make_unique(Args&&... args)
 {
     return UPtr<T>(new T(std::forward<Args>(args)...));
 }
 
-template <typename T, typename Object, typename ...Args>
-T call_member(Object& object, MemberFunction<T, Object, Args...> member, Args&& ...args)
+template <typename T, typename Object, typename... Args>
+T call_member(Object& object, MemberFunction<T, Object, Args...> member, Args&&... args)
 {
     return (object.*member)(std::forward<Args>(args)...);
 }
@@ -83,8 +80,6 @@ bool contains(T& needle, Set<S>& haystack)
     return (haystack.find(needle) != haystack.end());
 }
 
-
 }  // namespace cxx11utils
-
 
 #endif  // CXX11_UTILS_H_

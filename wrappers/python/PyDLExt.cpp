@@ -1,17 +1,15 @@
 // SPDX-License-Identifier: MIT
 // This file is part of `openmm-dlext`, see LICENSE.md
 
-#include "pybind11/functional.h"
+#include "PyDLExt.h"
 
 #include "DLExtForce.h"
 #include "DLExtKernelFactory.h"
 #include "DLExtKernels.h"
-#include "PyDLExt.h"
-
+#include "pybind11/functional.h"
 
 using namespace DLExt;
 namespace py = pybind11;
-
 
 namespace
 {
@@ -48,23 +46,19 @@ OpenMM::System& toSystem(py::capsule& capsule)
     throw py::type_error("Cannot convert the object to a OpenMM::System");
 }
 
-}
-
+}  // namespace
 
 void export_ContextView(py::module& m)
 {
     // ContextView can only be constructed from the Force::view factory
     py::class_<ContextView>(m, "ContextView")
-        .def(py::init(
-            [](Force& force, py::capsule& context) {
-                return force.view(toContext(context));
-            })
-        )
+        .def(py::init([](Force& force, py::capsule& context) {
+            return force.view(toContext(context));
+        }))
         .def("device_type", &ContextView::deviceType)
         .def("particle_number", &ContextView::particleNumber)
         .def("ids_ordering", &ContextView::idsOrdering)
-        .def("synchronize", &ContextView::synchronize)
-    ;
+        .def("synchronize", &ContextView::synchronize);
 }
 
 void export_Force(py::module& m)
@@ -72,45 +66,39 @@ void export_Force(py::module& m)
     // We only create instances of Force by wrapping existing instances created
     // by the SWIG bindings, which will be responsible for deallocating these
     py::class_<Force, std::unique_ptr<Force, py::nodelete>>(m, "Force")
-        .def(py::init( [](py::capsule& force) { return toForcePtr(force); } ),
+        .def(
+            py::init([](py::capsule& force) { return toForcePtr(force); }),
             py::return_value_policy::reference
         )
-        .def("is_present_in",
-            [](Force& self, py::capsule& system) {
-                return self.isPresentIn(toSystem(system));
-            }
+        .def(
+            "is_present_in",
+            [](Force& self, py::capsule& system) { return self.isPresentIn(toSystem(system)); }
         )
-        .def("add_to",
+        .def(
+            "add_to",
             [](Force& self, py::capsule& context, py::capsule& system) {
                 self.addTo(toContext(context), toSystem(system));
             }
         )
-        .def("set_callback_in",
+        .def(
+            "set_callback_in",
             [](Force& self, py::capsule& context, Function<void, long long>& callback) {
                 self.setCallbackIn(toContext(context), callback);
             }
         )
-        .def("view",
-            [](Force& self, py::capsule& context) {
-                return self.view(cast<OpenMM::Context>(context));
-            }
-        )
-    ;
+        .def("view", [](Force& self, py::capsule& context) {
+            return self.view(cast<OpenMM::Context>(context));
+        });
 }
-
 
 PYBIND11_MODULE(dlpack_extension, m)
 {
     // Enums
-    py::enum_<DLDeviceType>(m, "DeviceType")
-        .value("CPU", kDLCPU)
-        .value("GPU", kDLGPU)
-    ;
+    py::enum_<DLDeviceType>(m, "DeviceType").value("CPU", kDLCPU).value("GPU", kDLGPU);
     py::enum_<IdsOrdering>(m, "IdsOrdering")
         .value("Ordered", IdsOrdering::Ordered)
         .value("Forward", IdsOrdering::Forward)
-        .value("Reverse", IdsOrdering::Reverse)
-    ;
+        .value("Reverse", IdsOrdering::Reverse);
 
     // Classes
     export_ContextView(m);

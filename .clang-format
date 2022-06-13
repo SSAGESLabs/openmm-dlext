@@ -1,0 +1,32 @@
+---
+BasedOnStyle: WebKit
+---
+Language: Cpp
+AlignAfterOpenBracket: BlockIndent
+AllowShortEnumsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+BraceWrapping:
+  AfterClass: false
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: false
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: true
+BreakBeforeBinaryOperators: All
+BreakBeforeBraces: Custom
+IncludeBlocks: Regroup
+IndentWidth: 4
+PenaltyBreakAssignment: 100
+SpacesBeforeTrailingComments: 2
+Standard: Cpp11
+TabWidth: 4
+UseTab: Never

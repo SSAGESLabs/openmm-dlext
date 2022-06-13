@@ -2,19 +2,14 @@
 // This file is part of `openmm-dlext`, see LICENSE.md
 
 #include "DLExtForce.h"
+
 #include "DLExtKernelFactory.h"
 #include "internal/DLExtForceImpl.h"
-
 #include "openmm/OpenMMException.h"
-
 
 using namespace DLExt;
 
-
-bool Force::usesPeriodicBoundaryConditions() const
-{
-    return uses_periodic_bc;
-}
+bool Force::usesPeriodicBoundaryConditions() const { return uses_periodic_bc; }
 
 bool Force::isPresentIn(const OpenMM::System& system)
 {
@@ -28,8 +23,7 @@ bool Force::isPresentIn(const OpenMM::System& system)
 void Force::addTo(OpenMM::Context& context, OpenMM::System& system)
 {
     if (&context.getSystem() != &system)
-        throw OpenMM::OpenMMException(
-            "The system is different from the one referred by the context"
+        throw OpenMM::OpenMMException("The system is different from the one referred by the context"
         );
 
     auto& platform = context.getPlatform();
@@ -40,7 +34,8 @@ void Force::addTo(OpenMM::Context& context, OpenMM::System& system)
     if (!isPresentIn(system))
         system.addForce(this);
 
-    // Check if this Force instance has already created a ForceImpl within the ContextImpl
+    // Check if this Force instance has already created a ForceImpl within the
+    // ContextImpl
     auto& ctximpl = getContextImpl(context);
     auto& impls = ctximpl.getForceImpls();
     auto impl_found = false;
@@ -59,10 +54,7 @@ void Force::setCallbackIn(OpenMM::Context& context, Function<void, long long>& c
     impl.setCallback(callback);
 }
 
-ContextView Force::view(OpenMM::Context& context)
-{
-    return ContextView(getContextImpl(context));
-}
+ContextView Force::view(OpenMM::Context& context) { return ContextView(getContextImpl(context)); }
 
 OpenMM::ForceImpl* Force::createImpl() const
 {

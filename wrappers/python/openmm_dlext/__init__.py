@@ -1,21 +1,17 @@
+# flake8: noqa:F401
+
+from .dlpack_extension import ContextView, DeviceType
+from .dlpack_extension import Force as _Force
 from .dlpack_extension import (
-    ContextView,
-    DeviceType,
     IdsOrdering,
     atom_ids,
     forces,
     inverse_masses,
     positions,
     register_plugin,
-    velocities
+    velocities,
 )
-
-from .dlpack_extension_swig import (
-    Force,
-    _to_capsule
-)
-
-from .dlpack_extension import Force as _Force
+from .dlpack_extension_swig import Force, _to_capsule
 
 
 class Force(Force):

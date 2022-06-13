@@ -4,20 +4,16 @@
 #ifndef OPENMM_DLEXT_FORCEIMPL_H_
 #define OPENMM_DLEXT_FORCEIMPL_H_
 
+#include "DLExtForce.h"
+#include "openmm/cpu/CpuPlatform.h"
+#include "openmm/internal/ForceImpl.h"
 
 #include <map>
 #include <string>
 #include <vector>
 
-#include "DLExtForce.h"
-
-#include "openmm/cpu/CpuPlatform.h"
-#include "openmm/internal/ForceImpl.h"
-
-
 namespace DLExt
 {
-
 
 //
 //  Internal implementation of DLExt::Force.
@@ -34,16 +30,18 @@ public:
     std::map<std::string, double> getDefaultParameters();
     std::vector<std::string> getKernelNames();
     void setCallback(Function<void, long long>& f);
+
 private:
     const OpenMM::Force& owner;
-    Function<void, long long> callback = [](long long) { };
+    Function<void, long long> callback = [](long long) {};
 };
 
-
 //
-//  TODO: For OpenMM > 7.6 write a simplified version using `ContextImpl::getStepCount`
+//  TODO: For OpenMM > 7.6 write a simplified version using
+//  `ContextImpl::getStepCount`
 //
-inline long long getStepCount(OpenMM::ContextImpl& context) {
+inline long long getStepCount(OpenMM::ContextImpl& context)
+{
     long long step_count;
     const auto& id = typeid(context.getPlatform());
 
@@ -61,8 +59,6 @@ inline long long getStepCount(OpenMM::ContextImpl& context) {
     return step_count;
 }
 
-
 }  // namespace DLExt
-
 
 #endif  // OPENMM_DLEXT_FORCEIMPL_H_

@@ -4,44 +4,44 @@
 #ifndef OPENMM_DLEXT_H_
 #define OPENMM_DLEXT_H_
 
-#include <vector>
-
+#include "ContextView.h"
 #include "cxx11utils.h"
 #include "dlpack/dlpack.h"
-
-#include "ContextView.h"
-
 #include "openmm/Vec3.h"
+
+#include <vector>
 #ifdef OPENMM_BUILD_CUDA_LIB
 #include "openmm/cuda/CudaArray.h"
 #include "openmm/cuda/CudaContext.h"
 #endif
 
-
 namespace DLExt
 {
-
 
 using ReferenceArray = std::vector<OpenMM::Vec3>;
 #ifdef OPENMM_BUILD_CUDA_LIB
 using CudaArray = OpenMM::CudaArray;
 #endif
 
+static struct PositionsGetter {
+} kPositions;
+static struct VelocitiesGetter {
+} kVelocities;
+static struct ForcesGetter {
+} kForces;
+static struct AtomIdsGetter {
+} kAtomIds;
+static struct InverseMassesGetter {
+} kInverseMasses;
 
-static struct PositionsGetter     { } kPositions;
-static struct VelocitiesGetter    { } kVelocities;
-static struct ForcesGetter        { } kForces;
-static struct AtomIdsGetter       { } kAtomIds;
-static struct InverseMassesGetter { } kInverseMasses;
-
-static struct SecondDim { } kSecondDim;
+static struct SecondDim {
+} kSecondDim;
 
 struct DLDataBridge {
     std::vector<int64_t> shape;
     std::vector<int64_t> strides;
     DLManagedTensor tensor;
 };
-
 
 void _DLDataBridgeDeleter(DLManagedTensor* tensor)
 {
@@ -50,7 +50,8 @@ void _DLDataBridgeDeleter(DLManagedTensor* tensor)
 }
 
 // Uniform interface for property extraction
-// `opaque` returns a `void*` with the memory address of an array or stored property
+// `opaque` returns a `void*` with the memory address of an array or stored
+// property
 
 template <typename T>
 inline void* opaque(const std::vector<T>* array)
@@ -174,10 +175,7 @@ inline DLDataType dType(const ContextView& view, InverseMassesGetter)
     return dType(view, kVelocities);
 }
 
-constexpr int64_t paddedSize(int64_t n)
-{
-    return (n % 32 == 0) ? n : 32 * (n / 32 + 1);
-}
+constexpr int64_t paddedSize(int64_t n) { return (n % 32 == 0) ? n : 32 * (n / 32 + 1); }
 
 inline int64_t paddedSize(const ContextView& view, int64_t n)
 {
@@ -220,10 +218,9 @@ constexpr uint64_t offset(const ContextView& view, PropertyGetter)
 }
 
 template <typename PropertyGetter>
-DLManagedTensor* wrap(
-    const ContextView& view, PropertyGetter property
-) {
-    auto bridge = make_unique<DLDataBridge>();
+DLManagedTensor* wrap(const ContextView& view, PropertyGetter property)
+{
+    auto bridge = cxx11utils::make_unique<DLDataBridge>();
 
     bridge->tensor.manager_ctx = bridge.get();
     bridge->tensor.deleter = _DLDataBridgeDeleter;
@@ -252,33 +249,19 @@ DLManagedTensor* wrap(
     return &(bridge.release()->tensor);
 }
 
-inline DLManagedTensor* positions(const ContextView& view)
-{
-    return wrap(view, kPositions);
-}
+inline DLManagedTensor* positions(const ContextView& view) { return wrap(view, kPositions); }
 
-inline DLManagedTensor* velocities(const ContextView& view)
-{
-    return wrap(view, kVelocities);
-}
+inline DLManagedTensor* velocities(const ContextView& view) { return wrap(view, kVelocities); }
 
-inline DLManagedTensor* forces(const ContextView& view)
-{
-    return wrap(view, kForces);
-}
+inline DLManagedTensor* forces(const ContextView& view) { return wrap(view, kForces); }
 
-inline DLManagedTensor* atomIds(const ContextView& view)
-{
-    return wrap(view, kAtomIds);
-}
+inline DLManagedTensor* atomIds(const ContextView& view) { return wrap(view, kAtomIds); }
 
 inline DLManagedTensor* inverseMasses(const ContextView& view)
 {
     return wrap(view, kInverseMasses);
 }
 
-
 }  // namespace DLExt
-
 
 #endif  // OPENMM_DLEXT_H_

@@ -3,3 +3,6 @@ build/*
 
 # Backup files
 *.swp
+
+#trunk output
+.trunk/out
