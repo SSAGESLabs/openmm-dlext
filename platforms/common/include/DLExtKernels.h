@@ -13,11 +13,11 @@ class ForceKernel : public OpenMM::KernelImpl {
 public:
     static std::string Name() { return "DLExtForceKernel"; }
 
-    ForceKernel(std::string name, const OpenMM::Platform& platform) :
-        OpenMM::KernelImpl(name, platform)
-    {}
+    ForceKernel(std::string name, const OpenMM::Platform& platform)
+        : OpenMM::KernelImpl(name, platform)
+    { }
 };
 
-} // namespace DLExt
+}  // namespace DLExt
 
-#endif // OPENMM_DLEXT_KERNELS_H_
+#endif  // OPENMM_DLEXT_KERNELS_H_

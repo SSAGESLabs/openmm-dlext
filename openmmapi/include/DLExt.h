@@ -15,7 +15,6 @@
 #include "openmm/cuda/CudaContext.h"
 #endif
 
-
 namespace DLExt
 {
 
@@ -77,7 +76,10 @@ inline void* opaque(ReferencePlatformData& pdata, ForcesGetter)
 
 #ifdef OPENMM_BUILD_CUDA_LIB
 
-inline void* opaque(CudaArray& array) { return (void*)(array.getDevicePointer()); }
+inline void* opaque(CudaArray& array)
+{
+    return (void*)(array.getDevicePointer());
+}
 
 inline void* opaque(CudaPlatformData& pdata, PositionsGetter)
 {
@@ -99,7 +101,7 @@ inline void* opaque(CudaPlatformData& pdata, AtomIdsGetter)
     return opaque(pdata.contexts[0]->getAtomIndexArray());
 }
 
-#endif // OPENMM_BUILD_CUDA_LIB
+#endif  // OPENMM_BUILD_CUDA_LIB
 
 template <typename PlatformData, typename Property>
 inline void* opaque(const ContextView& view, Property p)
@@ -142,30 +144,30 @@ inline DLContext deviceInfo(const ContextView& view)
 #ifdef OPENMM_BUILD_CUDA_LIB
     if (view.deviceType() == kDLGPU) {
         auto& pdata = view.platformData<CudaPlatformData>();
-        return DLContext{kDLGPU, pdata.contexts[0]->getDeviceIndex()};
+        return DLContext { kDLGPU, pdata.contexts[0]->getDeviceIndex() };
     }
 #endif
-    return DLContext{kDLCPU, 0};
+    return DLContext { kDLCPU, 0 };
 }
 
 inline DLDataType dType(const ContextView& view, PositionsGetter)
 {
-    return DLDataType{kDLFloat, view.posPrecBits(), 1};
+    return DLDataType { kDLFloat, view.posPrecBits(), 1 };
 }
 
 inline DLDataType dType(const ContextView& view, VelocitiesGetter)
 {
-    return DLDataType{kDLFloat, view.velPrecBits(), 1};
+    return DLDataType { kDLFloat, view.velPrecBits(), 1 };
 }
 
 inline DLDataType dType(const ContextView& view, ForcesGetter)
 {
-    return DLDataType{view.forcesTypeCode(), 64, 1};
+    return DLDataType { view.forcesTypeCode(), 64, 1 };
 }
 
 constexpr DLDataType dType(const ContextView& view, AtomIdsGetter)
 {
-    return DLDataType{kDLInt, 32, 1};
+    return DLDataType { kDLInt, 32, 1 };
 }
 
 inline DLDataType dType(const ContextView& view, InverseMassesGetter)
@@ -260,6 +262,6 @@ inline DLManagedTensor* inverseMasses(const ContextView& view)
     return wrap(view, kInverseMasses);
 }
 
-} // namespace DLExt
+}  // namespace DLExt
 
-#endif // OPENMM_DLEXT_H_
+#endif  // OPENMM_DLEXT_H_

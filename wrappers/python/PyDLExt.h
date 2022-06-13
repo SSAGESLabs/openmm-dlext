@@ -21,15 +21,15 @@ inline pybind11::capsule encapsulate(const ContextView& view)
     auto dl_managed_tensor = property(view);
     return pybind11::capsule(
         dl_managed_tensor, kDLTensorCapsuleName,
-        [](PyObject* obj) { // PyCapsule_Destructor
-            auto dlmt =
-                static_cast<DLManagedTensor*>(PyCapsule_GetPointer(obj, kDLTensorCapsuleName));
+        [](PyObject* obj) {  // PyCapsule_Destructor
+            auto dlmt = static_cast<DLManagedTensor*>(PyCapsule_GetPointer(obj, kDLTensorCapsuleName));
             if (dlmt && dlmt->deleter) {
                 dlmt->deleter(dlmt);
             } else {
                 PyErr_Clear();
             }
-        });
+        }
+    );
 }
 
 template <typename T>
@@ -39,6 +39,6 @@ inline T& cast(pybind11::capsule& capsule)
     return *ptr;
 }
 
-} // namespace DLExt
+}  // namespace DLExt
 
-#endif // OPENMM_PYDLEXT_H_
+#endif  // OPENMM_PYDLEXT_H_

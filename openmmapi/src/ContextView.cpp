@@ -28,7 +28,8 @@ DLDeviceType DLExt::dlDeviceType(OpenMM::Platform& platform)
     throw OpenMM::OpenMMException("Unsupported platform");
 }
 
-ContextView::ContextView(OpenMM::ContextImpl& context) : ctx{&context}
+ContextView::ContextView(OpenMM::ContextImpl& context)
+    : ctx { &context }
 {
     dtype = dlDeviceType(ctx->getPlatform());
     pdata = ctx->getPlatformData();

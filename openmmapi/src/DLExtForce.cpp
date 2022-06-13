@@ -23,8 +23,8 @@ bool Force::isPresentIn(const OpenMM::System& system)
 void Force::addTo(OpenMM::Context& context, OpenMM::System& system)
 {
     if (&context.getSystem() != &system)
-        throw OpenMM::OpenMMException(
-            "The system is different from the one referred by the context");
+        throw OpenMM::OpenMMException("The system is different from the one referred by the context"
+        );
 
     auto& platform = context.getPlatform();
     if (!isSupported(platform))

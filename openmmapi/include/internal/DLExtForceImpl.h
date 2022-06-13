@@ -25,7 +25,8 @@ public:
     const OpenMM::Force& getOwner() const;
     void updateContextState(OpenMM::ContextImpl& context, bool& forcesInvalid);
     double calcForcesAndEnergy(
-        OpenMM::ContextImpl& context, bool includeForces, bool includeEnergy, int groups);
+        OpenMM::ContextImpl& context, bool includeForces, bool includeEnergy, int groups
+    );
     std::map<std::string, double> getDefaultParameters();
     std::vector<std::string> getKernelNames();
     void setCallback(Function<void, long long>& f);
@@ -58,6 +59,6 @@ inline long long getStepCount(OpenMM::ContextImpl& context)
     return step_count;
 }
 
-} // namespace DLExt
+}  // namespace DLExt
 
-#endif // OPENMM_DLEXT_FORCEIMPL_H_
+#endif  // OPENMM_DLEXT_FORCEIMPL_H_

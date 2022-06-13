@@ -15,7 +15,7 @@
 using namespace cxx11utils;
 using namespace DLExt;
 
-extern "C" DEFAULT_VISIBILITY void registerPlatforms() {}
+extern "C" DEFAULT_VISIBILITY void registerPlatforms() { }
 
 extern "C" DEFAULT_VISIBILITY void registerKernelFactories()
 {
@@ -39,11 +39,13 @@ bool DLExt::isSupported(OpenMM::Platform& platform)
 }
 
 OpenMM::KernelImpl* KernelFactory::createKernelImpl(
-    std::string name, const OpenMM::Platform& platform, OpenMM::ContextImpl& context) const
+    std::string name, const OpenMM::Platform& platform, OpenMM::ContextImpl& context
+) const
 {
     if (name == ForceKernel::Name())
         return new ForceKernel(name, platform);
 
     throw OpenMM::OpenMMException(
-        (std::string("Tried to create illegal kernel with name `") + name + "`").c_str());
+        (std::string("Tried to create illegal kernel with name `") + name + "`").c_str()
+    );
 }

@@ -46,7 +46,7 @@ using Member = T Object::*;
 //
 template <typename T>
 inline void maybe_unused(T&&)
-{}
+{ }
 
 // `make_unique` for C++11
 template <typename T, typename... Args>
@@ -80,6 +80,6 @@ bool contains(T& needle, Set<S>& haystack)
     return (haystack.find(needle) != haystack.end());
 }
 
-} // namespace cxx11utils
+}  // namespace cxx11utils
 
-#endif // CXX11_UTILS_H_
+#endif  // CXX11_UTILS_H_

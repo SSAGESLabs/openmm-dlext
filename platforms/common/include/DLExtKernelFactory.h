@@ -15,11 +15,12 @@ namespace DLExt
 class KernelFactory : public OpenMM::KernelFactory {
 public:
     OpenMM::KernelImpl* createKernelImpl(
-        std::string name, const OpenMM::Platform& platform, OpenMM::ContextImpl& context) const;
+        std::string name, const OpenMM::Platform& platform, OpenMM::ContextImpl& context
+    ) const;
 };
 
 bool isSupported(OpenMM::Platform& platform);
 
-} // namespace DLExt
+}  // namespace DLExt
 
-#endif // OPENMM_DLEXT_KERNEL_FACTORY_H_
+#endif  // OPENMM_DLEXT_KERNEL_FACTORY_H_

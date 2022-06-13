@@ -16,7 +16,7 @@ namespace
 
 void registerKernelFactories()
 {
-    std::vector<std::string> names = {ForceKernel::Name()};
+    std::vector<std::string> names = { ForceKernel::Name() };
 
     for (int i = 0; i < OpenMM::Platform::getNumPlatforms(); i++) {
         auto& platform = OpenMM::Platform::getPlatform(i);
@@ -46,14 +46,15 @@ OpenMM::System& toSystem(py::capsule& capsule)
     throw py::type_error("Cannot convert the object to a OpenMM::System");
 }
 
-} // namespace
+}  // namespace
 
 void export_ContextView(py::module& m)
 {
     // ContextView can only be constructed from the Force::view factory
     py::class_<ContextView>(m, "ContextView")
-        .def(py::init(
-            [](Force& force, py::capsule& context) { return force.view(toContext(context)); }))
+        .def(py::init([](Force& force, py::capsule& context) {
+            return force.view(toContext(context));
+        }))
         .def("device_type", &ContextView::deviceType)
         .def("particle_number", &ContextView::particleNumber)
         .def("ids_ordering", &ContextView::idsOrdering)
@@ -67,20 +68,24 @@ void export_Force(py::module& m)
     py::class_<Force, std::unique_ptr<Force, py::nodelete>>(m, "Force")
         .def(
             py::init([](py::capsule& force) { return toForcePtr(force); }),
-            py::return_value_policy::reference)
+            py::return_value_policy::reference
+        )
         .def(
             "is_present_in",
-            [](Force& self, py::capsule& system) { return self.isPresentIn(toSystem(system)); })
+            [](Force& self, py::capsule& system) { return self.isPresentIn(toSystem(system)); }
+        )
         .def(
             "add_to",
             [](Force& self, py::capsule& context, py::capsule& system) {
                 self.addTo(toContext(context), toSystem(system));
-            })
+            }
+        )
         .def(
             "set_callback_in",
             [](Force& self, py::capsule& context, Function<void, long long>& callback) {
                 self.setCallbackIn(toContext(context), callback);
-            })
+            }
+        )
         .def("view", [](Force& self, py::capsule& context) {
             return self.view(cast<OpenMM::Context>(context));
         });

@@ -24,7 +24,9 @@ using ReferencePlatformData = OpenMM::ReferencePlatform::PlatformData;
 using CudaPlatformData = OpenMM::CudaPlatform::PlatformData;
 #endif
 
-enum class IdsOrdering { Ordered, Forward, Reverse };
+enum class IdsOrdering { Ordered,
+                         Forward,
+                         Reverse };
 
 class DEFAULT_VISIBILITY ContextView {
 public:
@@ -80,6 +82,6 @@ T& ContextView::platformData() const
     throw OpenMM::OpenMMException("The requested type does not match the one of the stored data");
 }
 
-} // namespace DLExt
+}  // namespace DLExt
 
-#endif // OPENMM_DLEXT_CONTEXTVIEW_H_
+#endif  // OPENMM_DLEXT_CONTEXTVIEW_H_
