@@ -3,6 +3,7 @@ BasedOnStyle: WebKit
 ---
 Language: Cpp
 AlignAfterOpenBracket: BlockIndent
+AllowShortEnumsOnASingleLine: false
 AlwaysBreakAfterReturnType: None
 BraceWrapping:
   AfterClass: false
