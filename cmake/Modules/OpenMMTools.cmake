@@ -36,6 +36,7 @@ endfunction()
 
 function(check_python_and_openmm)
     if(OpenMM_ROOT AND NOT OpenMM_Python_EXECUTABLE)
+        message("OpenMM_ROOT found ${OpenMM_ROOT}")
         if(NOT Python_EXECUTABLE)
             set(Python_EXECUTABLE "${OpenMM_ROOT}/bin/python")
         endif()
