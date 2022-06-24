@@ -6,12 +6,13 @@ function(fetch_pybind11 ver)
         GIT_SHALLOW     TRUE
         DOWNLOAD_ONLY   TRUE
     )
-    set(pybind11_SOURCE_DIR ${pybind11_SOURCE_DIR} PARENT_SCOPE)
+    add_subdirectory(${pybind11_SOURCE_DIR} "${PROJECT_BINARY_DIR}/extern/pybind11")
 endfunction()
 
-if(NOT pybind11_VERSION)
-    set(pybind11_VERSION 2.6.2)
-endif()
+find_package(pybind11 2.6.2 QUIET)
 
-fetch_pybind11(${pybind11_VERSION})
-add_subdirectory(${pybind11_SOURCE_DIR} "${PROJECT_BINARY_DIR}/extern/pybind11")
+if(pybind11_FOUND)
+    message(STATUS "Found pybind11: ${pybind11_DIR} (version ${pybind11_VERSION})")
+else()
+    fetch_pybind11(2.9.2)
+endif()

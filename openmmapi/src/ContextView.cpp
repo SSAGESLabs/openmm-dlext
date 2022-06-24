@@ -22,7 +22,7 @@ DLDeviceType DLExt::dlDeviceType(OpenMM::Platform& platform)
         return kDLCPU;
 #ifdef OPENMM_BUILD_CUDA_LIB
     if (id == typeid(OpenMM::CudaPlatform))
-        return kDLGPU;
+        return kDLCUDA;
 #endif
 
     throw OpenMM::OpenMMException("Unsupported platform");
@@ -44,7 +44,7 @@ ContextView::ContextView(OpenMM::ContextImpl& context)
     }
 
 #ifdef OPENMM_BUILD_CUDA_LIB
-    if (dtype == kDLGPU) {
+    if (dtype == kDLCUDA) {
         auto data = reinterpret_cast<CudaPlatformData*>(pdata);
         if (!data->contexts[0]->getUseDoublePrecision()) {
             pos_bits = 32;
@@ -76,7 +76,7 @@ IdsOrdering ContextView::idsOrdering() const { return ids_ordering; }
 void ContextView::synchronize()
 {
 #ifdef OPENMM_BUILD_CUDA_LIB
-    if (dtype == kDLGPU) {
+    if (dtype == kDLCUDA) {
         auto data = reinterpret_cast<CudaPlatformData*>(pdata);
         data->contexts[0]->setAsCurrent();
         cuCtxSynchronize();

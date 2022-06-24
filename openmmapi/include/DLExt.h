@@ -114,7 +114,7 @@ template <typename Property>
 inline void* opaque(const ContextView& view, Property p)
 {
 #ifdef OPENMM_BUILD_CUDA_LIB
-    if (view.deviceType() == kDLGPU)
+    if (view.deviceType() == kDLCUDA)
         return opaque<CudaPlatformData>(view, p);
 #endif
     return opaque<ReferencePlatformData>(view, p);
@@ -123,7 +123,7 @@ inline void* opaque(const ContextView& view, Property p)
 inline void* opaque(const ContextView& view, AtomIdsGetter)
 {
 #ifdef OPENMM_BUILD_CUDA_LIB
-    if (view.deviceType() == kDLGPU)
+    if (view.deviceType() == kDLCUDA)
         return opaque<CudaPlatformData>(view, kAtomIds);
 #endif
     return opaque(&view.atomIds());
@@ -133,21 +133,21 @@ inline void* opaque(const ContextView& view, InverseMassesGetter)
 {
 #ifdef OPENMM_BUILD_CUDA_LIB
     // On the CudaPlatform inverse masses are stored along velocities
-    if (view.deviceType() == kDLGPU)
+    if (view.deviceType() == kDLCUDA)
         return opaque<CudaPlatformData>(view, kVelocities);
 #endif
     return opaque(&view.inverseMasses());
 }
 
-inline DLContext deviceInfo(const ContextView& view)
+inline DLDevice deviceInfo(const ContextView& view)
 {
 #ifdef OPENMM_BUILD_CUDA_LIB
-    if (view.deviceType() == kDLGPU) {
+    if (view.deviceType() == kDLCUDA) {
         auto& pdata = view.platformData<CudaPlatformData>();
-        return DLContext { kDLGPU, pdata.contexts[0]->getDeviceIndex() };
+        return DLDevice { kDLCUDA, pdata.contexts[0]->getDeviceIndex() };
     }
 #endif
-    return DLContext { kDLCPU, 0 };
+    return DLDevice { kDLCPU, 0 };
 }
 
 inline DLDataType dType(const ContextView& view, PositionsGetter)
@@ -179,7 +179,7 @@ constexpr int64_t paddedSize(int64_t n) { return (n % 32 == 0) ? n : 32 * (n / 3
 
 inline int64_t paddedSize(const ContextView& view, int64_t n)
 {
-    return view.deviceType() == kDLGPU ? paddedSize(n) : n;
+    return view.deviceType() == kDLCUDA ? paddedSize(n) : n;
 }
 
 template <typename PropertyGetter>
@@ -190,25 +190,25 @@ inline int64_t size(const ContextView& view, PropertyGetter)
 
 inline int64_t size(const ContextView& view, ForcesGetter)
 {
-    return view.deviceType() == kDLGPU ? 3 : view.particleNumber();
+    return view.deviceType() == kDLCUDA ? 3 : view.particleNumber();
 }
 
 template <typename PropertyGetter>
 inline int64_t size(const ContextView& view, PropertyGetter, SecondDim)
 {
-    return view.deviceType() == kDLGPU ? 4 : 3;
+    return view.deviceType() == kDLCUDA ? 4 : 3;
 }
 
 inline int64_t size(const ContextView& view, ForcesGetter, SecondDim)
 {
-    return view.deviceType() == kDLGPU ? paddedSize(view.particleNumber()) : 3;
+    return view.deviceType() == kDLCUDA ? paddedSize(view.particleNumber()) : 3;
 }
 
 constexpr int64_t size(const ContextView& view, AtomIdsGetter, SecondDim) { return 1; }
 
 inline int64_t size(const ContextView& view, InverseMassesGetter, SecondDim)
 {
-    return view.deviceType() == kDLGPU ? 4 : 1;
+    return view.deviceType() == kDLCUDA ? 4 : 1;
 }
 
 template <typename PropertyGetter>

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16..3.22)
+cmake_minimum_required(VERSION 3.16..3.24)
 
 # Set-up project
 project(OpenMMDLExt LANGUAGES CXX)
@@ -9,6 +9,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 find_package(OpenMM REQUIRED)
 
+include(GNUInstallDirs)
 include("${PROJECT_MODULE_PATH}/FetchCPM.cmake")
 include("${PROJECT_MODULE_PATH}/FetchDLPack.cmake")
 
@@ -23,8 +24,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenMM::OpenMM dlpack::dlpack)
 
 # Install
-include(GNUInstallDirs)
-
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX ${OpenMM_INSTALL_PREFIX} CACHE PATH "" FORCE)
 endif()
