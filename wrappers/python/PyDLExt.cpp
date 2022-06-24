@@ -94,7 +94,7 @@ void export_Force(py::module& m)
 PYBIND11_MODULE(dlpack_extension, m)
 {
     // Enums
-    py::enum_<DLDeviceType>(m, "DeviceType").value("CPU", kDLCPU).value("GPU", kDLGPU);
+    py::enum_<DLDeviceType>(m, "DeviceType").value("CPU", kDLCPU).value("GPU", kDLCUDA);
     py::enum_<IdsOrdering>(m, "IdsOrdering")
         .value("Ordered", IdsOrdering::Ordered)
         .value("Forward", IdsOrdering::Forward)

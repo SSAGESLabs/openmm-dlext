@@ -72,7 +72,7 @@ constexpr DLDeviceType dlDeviceType<ReferencePlatformData>()
 template <>
 constexpr DLDeviceType dlDeviceType<CudaPlatformData>()
 {
-    return kDLGPU;
+    return kDLCUDA;
 }
 #endif
 
