@@ -1,7 +1,7 @@
 # Helper functions for FindOpenMM.cmake
 
 function(find_openmm_with_python)
-    find_package(Python QUIET COMPONENTS Interpreter)
+    find_package(Python REQUIRED COMPONENTS Interpreter)
     if(NOT Python_EXECUTABLE)
         return()
     endif()
