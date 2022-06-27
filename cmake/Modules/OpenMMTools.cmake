@@ -31,6 +31,8 @@ else:
             set(OpenMM_ROOT ${OpenMM_PATH} PARENT_SCOPE)
         endif()
         set(OpenMM_Python_EXECUTABLE ${Python_EXECUTABLE} PARENT_SCOPE)
+    else()
+        message(STATUS "Unable to import openmm!")
     endif()
 endfunction()
 
