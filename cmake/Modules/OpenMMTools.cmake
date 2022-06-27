@@ -7,9 +7,8 @@ function(find_openmm_with_python)
     endif()
     set(FIND_OpenMM_SCRIPT "
 from __future__ import print_function;
-from importlib import import_module
 import os
-openmm = import_module(m)
+import openmm
 libpath = openmm.version.openmm_library_path
 print(os.path.normpath(os.path.join(libpath, os.pardir)), end='')"
     )
