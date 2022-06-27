@@ -9,30 +9,20 @@ function(find_openmm_with_python)
 from __future__ import print_function;
 from importlib import import_module
 import os
-openmm = None
-for m in ('openmm', 'simtk.openmm'):
-    try:
-        openmm = import_module(m)
-        break
-    except:
-        continue
-if openmm is not None:
-    libpath = openmm.version.openmm_library_path
-    print(os.path.normpath(os.path.join(libpath, os.pardir)), end='')
-else:
-    print('', end='')"
+openmm = import_module(m)
+libpath = openmm.version.openmm_library_path
+print(os.path.normpath(os.path.join(libpath, os.pardir)), end='')"
     )
     execute_process(
         COMMAND ${Python_EXECUTABLE} -c "${FIND_OpenMM_SCRIPT}"
         OUTPUT_VARIABLE OpenMM_PATH
     )
+    message(STATUS "Path for OpenMM: ${OpenMM_PATH}"
     if(OpenMM_PATH)
         if(NOT OpenMM_ROOT)
             set(OpenMM_ROOT ${OpenMM_PATH} PARENT_SCOPE)
         endif()
         set(OpenMM_Python_EXECUTABLE ${Python_EXECUTABLE} PARENT_SCOPE)
-    else()
-        message(STATUS "Unable to import openmm!")
     endif()
 endfunction()
 
