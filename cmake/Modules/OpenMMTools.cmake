@@ -17,7 +17,7 @@ print(os.path.normpath(os.path.join(libpath, os.pardir)), end='')"
         COMMAND ${Python_EXECUTABLE} -c "${FIND_OpenMM_SCRIPT}"
         OUTPUT_VARIABLE OpenMM_PATH
     )
-    message(STATUS "Path for OpenMM: ${OpenMM_PATH}"
+    message(STATUS "Path for OpenMM: ${OpenMM_PATH}")
     if(OpenMM_PATH)
         if(NOT OpenMM_ROOT)
             set(OpenMM_ROOT ${OpenMM_PATH} PARENT_SCOPE)
