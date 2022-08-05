@@ -1,0 +1,9 @@
+name: Merge Queue
+on: workflow_dispatch
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  docker:
+    uses: ./.github/workflows/docker.yml
