@@ -9,7 +9,7 @@ except:
     openmm = import_module("simtk.openmm")
 %}
 
-%import(module = "openmm") "OpenMMForce.i"
+%import "OpenMMForce.i"
 %include "std_string.i"
 
 %{
