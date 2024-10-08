@@ -51,6 +51,7 @@ set(pybind11_MODULE_NAME "_api")
 
 pybind11_add_module(${pybind11_MODULE_NAME}_fallback MODULE "")
 
+set_version(${pybind11_MODULE_NAME}_fallback)
 target_sources(${pybind11_MODULE_NAME}_fallback PRIVATE PyDLExt.cpp)
 target_compile_features(${pybind11_MODULE_NAME}_fallback PRIVATE cxx_std_11)
 target_link_libraries(${pybind11_MODULE_NAME}_fallback PRIVATE ${PROJECT_NAME})
@@ -63,6 +64,7 @@ install(TARGETS ${pybind11_MODULE_NAME}_fallback
 if(BUILD_CUDA_LIB)
     pybind11_add_module(${pybind11_MODULE_NAME} MODULE "")
 
+    set_version(${pybind11_MODULE_NAME})
     target_sources(${pybind11_MODULE_NAME} PRIVATE PyDLExt.cpp)
     target_compile_features(${pybind11_MODULE_NAME} PRIVATE cxx_std_11)
     target_link_libraries(${pybind11_MODULE_NAME} PRIVATE ${PROJECT_NAME}CUDA)

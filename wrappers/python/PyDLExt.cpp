@@ -97,6 +97,7 @@ PYBIND11_MODULE(_api, m)
     // instead of `openmm.dlext._api.x`.
     py::str module_name = m.attr("__name__");
     m.attr("__name__") = "openmm.dlext";
+    m.attr("__version__") = Py_STRINGIFY(PYPROJECT_VERSION);
 
     // Enums
     py::enum_<DLDeviceType>(m, "DeviceType").value("CPU", kDLCPU).value("GPU", kDLCUDA);

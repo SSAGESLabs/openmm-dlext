@@ -1,6 +1,9 @@
 FROM ssages/pysages-hoomd:latest
-WORKDIR /openmm-dlex/.docker_build
+WORKDIR /openmm-dlext
 
-COPY . ../
-RUN cmake .. && make install
-RUN python -c "import openmm_dlext"
+# Build the plugin
+COPY . .
+RUN cmake -S . -B build && cmake --build build --target install && rm -rf build
+
+# Test it can be loaded
+RUN python -c "import openmm.dlext"
