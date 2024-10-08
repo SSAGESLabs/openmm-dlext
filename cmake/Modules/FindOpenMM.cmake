@@ -82,16 +82,15 @@ if(OpenMM_FOUND AND NOT TARGET OpenMM::OpenMM)
         endif()
 
         if(CUDA_FOUND OR CUDAToolkit_FOUND)
-            target_compile_definitions(OpenMM::OpenMM INTERFACE OPENMM_BUILD_CUDA_LIB)
+            set(BUILD_CUDA_LIB ON CACHE INTERNAL "Build CUDA variant")
             target_include_directories(OpenMM::OpenMM SYSTEM INTERFACE
                 "${CUDAToolkit_INCLUDE_DIRS}"
             )
             target_include_directories(OpenMM::OpenMM INTERFACE
                 "${OpenMM_INCLUDE_DIR}/openmm/cuda"
             )
-            target_link_libraries(OpenMM::OpenMM INTERFACE
-                ${OpenMM_CUDA_LIBRARY}
-            )
+        else()
+            set(BUILD_CUDA_LIB OFF CACHE INTERNAL "Build CUDA variant")
         endif()
     endif(OpenMM_CUDA_LIBRARY)
 endif()

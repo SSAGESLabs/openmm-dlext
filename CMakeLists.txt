@@ -15,6 +15,10 @@ include("${PROJECT_MODULE_PATH}/FetchDLPack.cmake")
 
 # Create the library
 add_library(${PROJECT_NAME} SHARED "")
+# Also create a CUDA variant when possible
+if(BUILD_CUDA_LIB)
+    add_library(${PROJECT_NAME}CUDA SHARED "")
+endif()
 
 add_subdirectory(openmmapi)
 add_subdirectory(platforms)
@@ -22,6 +26,13 @@ add_subdirectory(platforms)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenMM::OpenMM dlpack::dlpack)
+
+if(BUILD_CUDA_LIB)
+    target_compile_definitions(${PROJECT_NAME}CUDA PUBLIC OPENMM_BUILD_CUDA_LIB)
+    target_link_libraries(${PROJECT_NAME}CUDA PUBLIC
+        ${PROJECT_NAME} ${OpenMM_CUDA_LIBRARY}
+    )
+endif()
 
 # Install
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -41,6 +52,12 @@ install(DIRECTORY include/
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/openmm-dlext"
     FILES_MATCHING PATTERN "*.h"
 )
+
+if(BUILD_CUDA_LIB)
+    install(TARGETS ${PROJECT_NAME}CUDA
+        DESTINATION ${OpenMM_INSTALL_LIBDIR}
+    )
+endif()
 
 # Build wrappers
 add_subdirectory(wrappers)

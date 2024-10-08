@@ -1,4 +1,4 @@
-%module dlpack_extension_swig
+%module api_swig
 
 %pythoncode
 %{
@@ -9,7 +9,11 @@ except:
     openmm = import_module("simtk.openmm")
 %}
 
+#ifdef SIMTK_API
+%import "OpenMMForce.i"
+#else
 %import(module = "openmm") "OpenMMForce.i"
+#endif
 %include "std_string.i"
 
 %{

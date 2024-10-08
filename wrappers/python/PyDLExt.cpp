@@ -91,8 +91,13 @@ void export_Force(py::module& m)
         });
 }
 
-PYBIND11_MODULE(dlpack_extension, m)
+PYBIND11_MODULE(_api, m)
 {
+    // We want to display the members of the module as `openmm.dlext.x`
+    // instead of `openmm.dlext._api.x`.
+    py::str module_name = m.attr("__name__");
+    m.attr("__name__") = "openmm.dlext";
+
     // Enums
     py::enum_<DLDeviceType>(m, "DeviceType").value("CPU", kDLCPU).value("GPU", kDLCUDA);
     py::enum_<IdsOrdering>(m, "IdsOrdering")
@@ -111,4 +116,7 @@ PYBIND11_MODULE(dlpack_extension, m)
     m.def("inverse_masses", encapsulate<&inverseMasses>);
     m.def("positions", encapsulate<&positions>);
     m.def("velocities", encapsulate<&velocities>);
+
+    // Set back the module_name to its original value
+    m.attr("__name__") = module_name;
 }
